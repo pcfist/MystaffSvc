@@ -72,17 +72,31 @@ void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
 		if (running_)
 			launchMainApp_(sessionId);
 		break;
+
 	case QtServiceBase::Logoff:
 		qDebug() << "session " << sessionId << " LOGGED OFF";
 		break;
+
 	case QtServiceBase::Lock:
 		qDebug() << "session " << sessionId << " LOCKED";
 		break;
+
 	case QtServiceBase::Unlock:
 		qDebug() << "session " << sessionId << " UNLOCKED";
 		if (running_)
 			launchMainApp_(sessionId);
 		break;
+
+	case QtServiceBase::ConnectConsole:
+		qDebug() << "session " << sessionId << " CONSOLE CONNECTED";
+		if (running_)
+			launchMainApp_(sessionId);
+		break;
+
+	case QtServiceBase::DisconnectConsole:
+		qDebug() << "session " << sessionId << " CONSOLE DISCONNECTED";
+		break;
+
 	default:
 		qDebug() << "session " << sessionId << " ???";
 		break;
