@@ -46,7 +46,7 @@ MystaffSvc::MystaffSvc(int argc, char* argv[]) : QtService(argc, argv, myService
 	// Add debug privilege to access the process information.
 	getDebugPrivilege();
 
-	QSettings settings;
+	QSettings settings(QSettings::SystemScope, "TimeDoctorLLC");
 	settings.setValue("testKey", "TestValue");
 	mainAppPath_ = settings.value("MainAppPath").toString();
 
