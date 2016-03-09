@@ -50,10 +50,7 @@ MystaffSvc::MystaffSvc(int argc, char* argv[]) : QtService(argc, argv, myService
 	settings.setValue("testKey", "TestValue");
 	mainAppPath_ = settings.value("MainAppPath").toString();
 
-	if (mainAppPath_.contains(' ')) {
-		mainAppPath_.push_front('\"');
-		mainAppPath_.push_back('\"');
-	}
+	qDebug() << "Main app path is " << mainAppPath_;
 }
 
 
