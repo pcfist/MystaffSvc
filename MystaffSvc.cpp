@@ -37,7 +37,7 @@ HANDLE getProcessByExecutableName(const QString& path)
 
 MystaffSvc::MystaffSvc(int argc, char* argv[]) : QtService(argc, argv, myServiceName)
 {
-	QCoreApplication::setOrganizationName("MyStaff");
+	QCoreApplication::setOrganizationName("TimeDoctorLLC");
 	QCoreApplication::setOrganizationDomain("mystaff.com");
 	QCoreApplication::setApplicationName("MystaffSvc");
 
