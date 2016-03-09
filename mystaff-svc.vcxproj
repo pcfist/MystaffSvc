@@ -54,6 +54,7 @@
   <ItemGroup>
     <ClInclude Include="debug.h" />
     <ClInclude Include="process_tools.hxx" />
+    <ClInclude Include="UserSession.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\qt-solutions\QtService\buildlib\QtSolutions_Service-head.vcxproj">
