@@ -67,21 +67,21 @@ void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
 	switch (eventType)
 	{
 	case QtServiceBase::Logon:
-		qDebug() << "session " << sessionId << " LOGGED ON" << endl;
+		qDebug() << "session " << sessionId << " LOGGED ON";
 		launchMainApp_(sessionId);
 		break;
 	case QtServiceBase::Logoff:
-		qDebug() << "session " << sessionId << " LOGGED OFF" << endl;
+		qDebug() << "session " << sessionId << " LOGGED OFF";
 		break;
 	case QtServiceBase::Lock:
-		qDebug() << "session " << sessionId << " LOCKED" << endl;
+		qDebug() << "session " << sessionId << " LOCKED";
 		break;
 	case QtServiceBase::Unlock:
-		qDebug() << "session " << sessionId << " UNLOCKED" << endl;
+		qDebug() << "session " << sessionId << " UNLOCKED";
 		launchMainApp_(sessionId);
 		break;
 	default:
-		qDebug() << "session " << sessionId << " ???" << endl;
+		qDebug() << "session " << sessionId << " ???";
 		break;
 	}
 }
