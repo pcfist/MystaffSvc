@@ -59,22 +59,7 @@ MystaffSvc::MystaffSvc(int argc, char* argv[]) : QtService(argc, argv, myService
 
 void MystaffSvc::start()
 {
-	if (HANDLE process = getProcessByExecutableName(mainAppPath_))
-	{
-		qDebug() << "Main app already running!" << endl;
- 		::CloseHandle(process);
-	}
-	else
-	{
-		qDebug() << "Launching the main app..." << endl;
-		mainAppProcess_ = new QProcess;
-		
-// 		QFileInfo fi(mainAppPath_);
-// 		mainAppProcess_->setProgram(mainAppPath_);
-// 		mainAppProcess_->setWorkingDirectory(fi.baseName());
-// 		mainAppProcess_->start();
-		QProcess::startDetached(mainAppPath_);
-	}
+	launchMainApp_(UserSession::getActiveSessionId());
 }
 
 void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
@@ -83,6 +68,7 @@ void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
 	{
 	case QtServiceBase::Logon:
 		qDebug() << "session " << sessionId << " LOGGED ON" << endl;
+		launchMainApp_(sessionId);
 		break;
 	case QtServiceBase::Logoff:
 		qDebug() << "session " << sessionId << " LOGGED OFF" << endl;
@@ -92,6 +78,7 @@ void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
 		break;
 	case QtServiceBase::Unlock:
 		qDebug() << "session " << sessionId << " UNLOCKED" << endl;
+		launchMainApp_(sessionId);
 		break;
 	default:
 		qDebug() << "session " << sessionId << " ???" << endl;
