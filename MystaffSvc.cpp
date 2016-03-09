@@ -8,6 +8,8 @@
 
 #include "UserSession.h"
 
+#include "process_tools.hxx"
+
 
 /*static*/
 const char MystaffSvc::myServiceName[] = "MyStaff Service";

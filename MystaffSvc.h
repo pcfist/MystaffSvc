@@ -10,8 +10,6 @@
 #include <QSettings>
 #include <QProcess>
 
-#include "process_tools.hxx"
-
 
 class MystaffSvc : public QtService<QCoreApplication>
 {

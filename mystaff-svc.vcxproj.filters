@@ -53,5 +53,8 @@
     <ClInclude Include="UserSession.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="scope_guard.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
