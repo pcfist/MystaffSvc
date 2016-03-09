@@ -101,7 +101,7 @@ public:
 			if (processSid != mysid_)
 				continue;
 
-			HANDLE proc = ::OpenProcess(PROCESS_ALL_ACCESS, false, pidArray[i]);
+			HANDLE proc = ::OpenProcess(PROCESS_QUERY_INFORMATION, false, pidArray[i]);
 			if (!proc)
 				continue;
 

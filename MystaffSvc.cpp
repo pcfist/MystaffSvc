@@ -23,7 +23,7 @@ HANDLE getProcessByExecutableName(const QString& path)
 
 	int processCount = bytesReturned/sizeof *pidArray;
 	for (int i = 0; i < processCount; ++i) {
-		HANDLE proc = ::OpenProcess(PROCESS_ALL_ACCESS, false, pidArray[i]);
+		HANDLE proc = ::OpenProcess(PROCESS_QUERY_INFORMATION, false, pidArray[i]);
 		if (!proc)
 			continue;
 
