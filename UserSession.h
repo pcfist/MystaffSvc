@@ -15,6 +15,9 @@
 
 #include <QDebug>
 
+#include "scope_guard.hxx"
+#include "process_tools.hxx"
+
 
 class UserSession
 {
@@ -75,6 +78,41 @@ public:
 
 		if (env)
 			::DestroyEnvironmentBlock(env);
+	}
+
+
+
+	/**
+	 * Finds first instance of process with given image path in the session.
+	 * @param[in]	path	- Executable image path.
+	 * @return	[HANDLE]	- Process handle or 0 if not found. The handle must be closed with ::CloseHandle().
+	 */
+	HANDLE getProcessByExecutableName(const QString& path)
+	{
+		DWORD pidArray[1024];
+		DWORD bytesReturned;
+		if (!EnumProcesses(pidArray, sizeof pidArray, &bytesReturned))
+			return 0;
+
+		int processCount = bytesReturned / sizeof *pidArray;
+		for (int i = 0; i < processCount; ++i) {
+			DWORD processSid = 0;
+			::ProcessIdToSessionId(pidArray[i], &processSid);
+			if (processSid != mysid_)
+				continue;
+
+			HANDLE proc = ::OpenProcess(PROCESS_ALL_ACCESS, false, pidArray[i]);
+			if (!proc)
+				continue;
+
+			QString imagePath = getProcessImagePath(proc);
+			if (imagePath == path)
+				return proc;
+
+			::CloseHandle(proc);
+		}
+
+		return 0;
 	}
 
 protected:
