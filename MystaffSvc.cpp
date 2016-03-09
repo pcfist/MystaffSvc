@@ -59,6 +59,8 @@ MystaffSvc::MystaffSvc(int argc, char* argv[]) : QtService(argc, argv, myService
 
 void MystaffSvc::start()
 {
+	running_ = true;
+
 	launchMainApp_(UserSession::getActiveSessionId());
 }
 
@@ -68,7 +70,8 @@ void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
 	{
 	case QtServiceBase::Logon:
 		qDebug() << "session " << sessionId << " LOGGED ON";
-		launchMainApp_(sessionId);
+		if (running_)
+			launchMainApp_(sessionId);
 		break;
 	case QtServiceBase::Logoff:
 		qDebug() << "session " << sessionId << " LOGGED OFF";
@@ -78,7 +81,8 @@ void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
 		break;
 	case QtServiceBase::Unlock:
 		qDebug() << "session " << sessionId << " UNLOCKED";
-		launchMainApp_(sessionId);
+		if (running_)
+			launchMainApp_(sessionId);
 		break;
 	default:
 		qDebug() << "session " << sessionId << " ???";

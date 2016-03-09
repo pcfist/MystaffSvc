@@ -30,6 +30,8 @@ private:
 	QString mainAppPath_;
 	QProcess* mainAppProcess_;
 
+	bool running_ = false;
+
 
 	void launchMainApp_(intptr_t sessionId);
 };
