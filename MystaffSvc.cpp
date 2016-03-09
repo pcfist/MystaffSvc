@@ -6,6 +6,8 @@
 #include <windows.h>
 #include <psapi.h>
 
+#include "UserSession.h"
+
 
 /*static*/
 const char MystaffSvc::myServiceName[] = "MyStaff Service";
@@ -94,5 +96,26 @@ void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
 	default:
 		qDebug() << "session " << sessionId << " ???" << endl;
 		break;
+	}
+}
+
+
+void MystaffSvc::launchMainApp_(intptr_t sessionId)
+{
+	if (HANDLE process = getProcessByExecutableName(mainAppPath_))
+	{
+		qDebug() << "Main app already running!";
+		::CloseHandle(process);
+	}
+	else
+	{
+		qDebug() << "Launching the main app...";
+
+//		QProcess::startDetached(mainAppPath_);
+		
+		if (sessionId) {
+			UserSession s(sessionId);
+			s.startProcess(mainAppPath_);
+		}
 	}
 }

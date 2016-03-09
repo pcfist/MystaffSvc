@@ -29,5 +29,8 @@ private:
 private:
 	QString mainAppPath_;
 	QProcess* mainAppProcess_;
+
+
+	void launchMainApp_(intptr_t sessionId);
 };
 
