@@ -106,7 +106,8 @@ void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
 
 void MystaffSvc::launchMainApp_(intptr_t sessionId)
 {
-	if (HANDLE process = getProcessByExecutableName(mainAppPath_))
+	UserSession s(sessionId);
+	if (HANDLE process = s.getProcessByExecutableName(mainAppPath_))
 	{
 		qDebug() << "Main app already running!";
 		::CloseHandle(process);
@@ -114,12 +115,6 @@ void MystaffSvc::launchMainApp_(intptr_t sessionId)
 	else
 	{
 		qDebug() << "Launching the main app...";
-
-//		QProcess::startDetached(mainAppPath_);
-		
-		if (sessionId) {
-			UserSession s(sessionId);
-			s.startProcess(mainAppPath_);
-		}
+		s.startProcess(mainAppPath_);
 	}
 }
