@@ -115,6 +115,28 @@ public:
 		return 0;
 	}
 
+	/**
+	 * Returns true if a user is logged on to this session.
+	 * @return	[bool]	- true if session is associated with user.
+	 */
+	bool isDesktopSession() const {
+		DWORD level = 1;
+		WTS_SESSION_INFO_1* si = nullptr;
+		DWORD count = 0;
+		if (!::WTSEnumerateSessionsEx(WTS_CURRENT_SERVER_HANDLE, &level, 0, &si, &count))
+			return true;
+
+		auto siGuard = make_scope_guard([si, count]{ ::WTSFreeMemoryEx(WTSTypeSessionInfoLevel1, si, count); });
+
+		for (DWORD i = 0; i < count; ++i) {
+			//qDebug() << " - sid" << si[i]. << "name =" << si[i].pSessionName << "username =" << si[i].pUserName;
+			if (si[i].SessionId == mysid_)
+				return si[i].pUserName != nullptr;
+		}
+
+		return true;
+	}
+
 protected:
 	intptr_t mysid_ = 0;
 	HANDLE myhandle_ = 0;
