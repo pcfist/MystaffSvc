@@ -68,37 +68,37 @@ void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
 	switch (eventType)
 	{
 	case QtServiceBase::Logon:
-		qDebug() << "session " << sessionId << " LOGGED ON";
+		qDebug() << "session" << sessionId << "LOGGED ON";
 		if (running_)
 			launchMainApp_(sessionId);
 		break;
 
 	case QtServiceBase::Logoff:
-		qDebug() << "session " << sessionId << " LOGGED OFF";
+		qDebug() << "session" << sessionId << "LOGGED OFF";
 		break;
 
 	case QtServiceBase::Lock:
-		qDebug() << "session " << sessionId << " LOCKED";
+		qDebug() << "session" << sessionId << "LOCKED";
 		break;
 
 	case QtServiceBase::Unlock:
-		qDebug() << "session " << sessionId << " UNLOCKED";
+		qDebug() << "session" << sessionId << "UNLOCKED";
 		if (running_)
 			launchMainApp_(sessionId);
 		break;
 
 	case QtServiceBase::ConnectConsole:
-		qDebug() << "session " << sessionId << " CONSOLE CONNECTED";
+		qDebug() << "session" << sessionId << "CONSOLE CONNECTED";
 		if (running_)
 			launchMainApp_(sessionId);
 		break;
 
 	case QtServiceBase::DisconnectConsole:
-		qDebug() << "session " << sessionId << " CONSOLE DISCONNECTED";
+		qDebug() << "session" << sessionId << "CONSOLE DISCONNECTED";
 		break;
 
 	default:
-		qDebug() << "session " << sessionId << " ???";
+		qDebug() << "session" << sessionId << " ???";
 		break;
 	}
 }
@@ -120,12 +120,12 @@ void MystaffSvc::launchMainApp_(intptr_t sessionId)
 	
 	if (HANDLE process = s.getProcessByExecutableName(mainAppPath_))
 	{
-		qDebug() << "Main app already running!";
+		qDebug() << "Main app already running @ sid" << sessionId;
 		::CloseHandle(process);
 	}
 	else
 	{
-		qDebug() << "Launching the main app...";
+		qDebug() << "Launching the main app @ sid =" << sessionId << "...";
 		s.startProcess(mainAppPath_);
 	}
 }
