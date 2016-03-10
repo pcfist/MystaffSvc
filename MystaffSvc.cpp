@@ -107,6 +107,17 @@ void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
 void MystaffSvc::launchMainApp_(intptr_t sessionId)
 {
 	UserSession s(sessionId);
+	/*
+	 * Check if this session has a user logged on. It is possible to have a session
+	 * that is not associated with any user (for example, such a session is created
+	 * when 'Switch User' screen is active). We don't need to launch our app in such
+	 * sessions because it will be run under System account.
+	 */
+	if (!s.isDesktopSession()) {
+		qDebug() << "Session" << sessionId << "is NOT a desktop session! Skipping.";
+		return;
+	}
+	
 	if (HANDLE process = s.getProcessByExecutableName(mainAppPath_))
 	{
 		qDebug() << "Main app already running!";
