@@ -135,6 +135,9 @@ pid_t MystaffSvc::launchMainApp_(intptr_t sessionId)
 		return AlreadyRunning;
 	}
 	
+	watchdogMutex_.lock();
+	auto mutexGuard = make_scope_guard([this]{ watchdogMutex_.unlock(); });
+
 	if (HANDLE process = s.getProcessByExecutableName(mainAppPath_))
 	{
 		::CloseHandle(process);

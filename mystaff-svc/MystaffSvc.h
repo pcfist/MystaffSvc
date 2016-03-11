@@ -37,6 +37,8 @@ private:
 private:
 	QString mainAppPath_;
 	QTimer watchdogTimer_;
+	// Mutex held when launching main application to avoid race conditions.
+	QMutex watchdogMutex_;
 
 	bool running_ = false;
 
