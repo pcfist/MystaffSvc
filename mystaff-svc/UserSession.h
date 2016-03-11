@@ -31,6 +31,23 @@ public:
 		return sid == UINT_MAX ? 0 : sid;
 	}
 
+	/**
+	 * Returns list of user session IDs.
+	 * @return	[QVector<intptr_t>]	- List of user session IDs.
+	 */
+	static QVector<intptr_t> getSessionIDs() {
+		WTS_SESSION_INFO* si = nullptr;
+		DWORD sessionCount = 0;
+		::WTSEnumerateSessions(WTS_CURRENT_SERVER_HANDLE, 0, 1, &si, &sessionCount);
+
+		QVector<intptr_t> sessions;
+		sessions.reserve(sessionCount);
+		for (DWORD i = 0; i < sessionCount; ++i)
+			sessions.push_back(si[i].SessionId);
+
+		return sessions;
+	}
+
 public:
 	UserSession(intptr_t sid) : mysid_(sid) {
 		::WTSQueryUserToken(mysid_, &myhandle_);
