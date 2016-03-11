@@ -108,7 +108,7 @@ void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
 }
 
 
-void MystaffSvc::launchMainApp_(intptr_t sessionId)
+pid_t MystaffSvc::launchMainApp_(intptr_t sessionId)
 {
 	UserSession s(sessionId);
 	/*
@@ -118,19 +118,17 @@ void MystaffSvc::launchMainApp_(intptr_t sessionId)
 	 * sessions because it will be run under System account.
 	 */
 	if (!s.isDesktopSession()) {
-		qDebug() << "Session" << sessionId << "is NOT a desktop session! Skipping.";
-		return;
+		return AlreadyRunning;
 	}
 	
 	if (HANDLE process = s.getProcessByExecutableName(mainAppPath_))
 	{
-		qDebug() << "Main app already running @ sid" << sessionId;
 		::CloseHandle(process);
+		return AlreadyRunning;
 	}
 	else
 	{
-		qDebug() << "Launching the main app @ sid =" << sessionId << "...";
-		s.startProcess(mainAppPath_);
+		return s.startProcess(mainAppPath_);
 	}
 }
 
@@ -139,6 +137,12 @@ void MystaffSvc::onWatchdogTimeout_()
 	auto sessions = UserSession::getSessionIDs();
 
 	for (auto sid : sessions) {
-		launchMainApp_(sid);
+		auto result = launchMainApp_(sid);
+
+		if (result == LaunchFailed) {
+			qWarning() << "Could not start main application in session" << sid;
+		} else if (result != AlreadyRunning) {
+			qDebug() << "Main application not found in session" << sid << "-> launched successfully, pid =" << result;
+		}
 	}
 }

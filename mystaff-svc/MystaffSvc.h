@@ -10,6 +10,8 @@
 #include <QSettings>
 #include <QTimer>
 
+#include "process_tools.hxx"
+
 
 class MystaffSvc : public QObject, public QtService<QCoreApplication>
 {
@@ -27,6 +29,11 @@ private:
 
 	static const int watchdogInterval = 3000;	// [ms]
 
+	enum AppLaunchResult {
+		LaunchFailed = 0,
+		AlreadyRunning = (pid_t)(-1),
+	};
+
 private:
 	QString mainAppPath_;
 	QTimer watchdogTimer_;
@@ -34,7 +41,7 @@ private:
 	bool running_ = false;
 
 
-	void launchMainApp_(intptr_t sessionId);
+	pid_t launchMainApp_(intptr_t sessionId);
 
 private slots:
 	/**
