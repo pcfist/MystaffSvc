@@ -12,6 +12,12 @@
 #include <QString>
 
 
+// Process ID value type.
+typedef DWORD	pid_t;
+// Session ID value type.
+typedef DWORD	sid_t;
+
+
 __declspec(selectany)
 HANDLE _thisProcess = ::GetCurrentProcess();
 

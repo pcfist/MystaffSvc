@@ -26,8 +26,8 @@ public:
 		return UserSession(getActiveSessionId());
 	}
 
-	static intptr_t getActiveSessionId() {
-		intptr_t sid = ::WTSGetActiveConsoleSessionId();
+	static sid_t getActiveSessionId() {
+		sid_t sid = ::WTSGetActiveConsoleSessionId();
 		return sid == UINT_MAX ? 0 : sid;
 	}
 
@@ -35,12 +35,12 @@ public:
 	 * Returns list of user session IDs.
 	 * @return	[QVector<intptr_t>]	- List of user session IDs.
 	 */
-	static QVector<intptr_t> getSessionIDs() {
+	static QVector<sid_t> getSessionIDs() {
 		WTS_SESSION_INFO* si = nullptr;
 		DWORD sessionCount = 0;
 		::WTSEnumerateSessions(WTS_CURRENT_SERVER_HANDLE, 0, 1, &si, &sessionCount);
 
-		QVector<intptr_t> sessions;
+		QVector<sid_t> sessions;
 		sessions.reserve(sessionCount);
 		for (DWORD i = 0; i < sessionCount; ++i)
 			sessions.push_back(si[i].SessionId);
@@ -49,7 +49,7 @@ public:
 	}
 
 public:
-	UserSession(intptr_t sid) : mysid_(sid) {
+	UserSession(sid_t sid) : mysid_(sid) {
 		::WTSQueryUserToken(mysid_, &myhandle_);
 	}
 
@@ -155,6 +155,6 @@ public:
 	}
 
 protected:
-	intptr_t mysid_ = 0;
+	sid_t mysid_ = 0;
 	HANDLE myhandle_ = 0;
 };
