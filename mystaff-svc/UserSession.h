@@ -67,7 +67,7 @@ public:
 		return myhandle_ != 0;
 	}
 
-	void startProcess(const QString& targetPath) {
+	pid_t startProcess(const QString& targetPath) {
 		STARTUPINFO si = {};
 		si.cb = sizeof si;
 		si.lpDesktop = L"";
@@ -85,7 +85,7 @@ public:
 
 		PROCESS_INFORMATION pi = {};
 		bool result = ::CreateProcessAsUser(myhandle_, targetPath.toStdWString().c_str(), nullptr, nullptr, nullptr, false, CREATE_UNICODE_ENVIRONMENT, env,
-			wd.toStdWString().c_str(), &si, &pi);
+			wd.toStdWString().c_str(), &si, &pi) != FALSE;
 
 		if (result) {
 			qDebug() << "CreateProcessAsUser() succeeded, pid =" << pi.dwProcessId;
@@ -95,6 +95,8 @@ public:
 
 		if (env)
 			::DestroyEnvironmentBlock(env);
+
+		return pi.dwProcessId;
 	}
 
 
