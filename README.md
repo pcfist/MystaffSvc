@@ -10,7 +10,6 @@ Service application is built with Qt Framework and depends on [QtService library
 2. Pass current user information to the main application.
 
 ##TODO:
-* Keep the main application alive, e.g. restart it when it gets terminated.
 * Add QtCreator project files.
 * Add QtService as a submodule (?)
 * Add support for platforms other than Windows.
