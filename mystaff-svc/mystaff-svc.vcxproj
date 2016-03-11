@@ -58,7 +58,7 @@
     <ClInclude Include="UserSession.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\qt-solutions\QtService\buildlib\QtSolutions_Service-head.vcxproj">
+    <ProjectReference Include="..\QtService\buildlib\QtSolutions_Service-head.vcxproj">
       <Project>{bb46ea52-8b26-3e0c-b53a-8b2f61afd9da}</Project>
     </ProjectReference>
   </ItemGroup>
