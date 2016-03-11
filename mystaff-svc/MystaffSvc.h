@@ -9,10 +9,12 @@
 #include <QtService>
 #include <QSettings>
 #include <QProcess>
+#include <QTimer>
 
 
-class MystaffSvc : public QtService<QCoreApplication>
+class MystaffSvc : public QObject, public QtService<QCoreApplication>
 {
+	Q_OBJECT
 public:
 	MystaffSvc(int argc, char* argv[]);
 
