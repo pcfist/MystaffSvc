@@ -26,13 +26,23 @@ private:
 	static
 	const char myServiceName[];
 
+	static const int watchdogInterval = 3000;	// [ms]
+
 private:
 	QString mainAppPath_;
 	QProcess* mainAppProcess_;
+	QTimer watchdogTimer_;
 
 	bool running_ = false;
 
 
 	void launchMainApp_(intptr_t sessionId);
+
+private slots:
+	/**
+	 * Watchdog timer callback.
+	 * Keeps the main application running.
+	 */
+	void onWatchdogTimeout_();
 };
 

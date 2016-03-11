@@ -53,6 +53,9 @@ MystaffSvc::MystaffSvc(int argc, char* argv[]) : QtService(argc, argv, myService
 	mainAppPath_ = settings.value("MainAppPath").toString();
 
 	qDebug() << "Main app path is " << mainAppPath_;
+
+	watchdogTimer_.setInterval(watchdogInterval);
+	QObject::connect(&watchdogTimer_, SIGNAL(timeout()), SLOT(onWatchdogTimeout_()));
 }
 
 
@@ -61,6 +64,7 @@ void MystaffSvc::start()
 	running_ = true;
 
 	launchMainApp_(UserSession::getActiveSessionId());
+	watchdogTimer_.start();
 }
 
 void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
@@ -127,5 +131,14 @@ void MystaffSvc::launchMainApp_(intptr_t sessionId)
 	{
 		qDebug() << "Launching the main app @ sid =" << sessionId << "...";
 		s.startProcess(mainAppPath_);
+	}
+}
+
+void MystaffSvc::onWatchdogTimeout_()
+{
+	auto sessions = UserSession::getSessionIDs();
+
+	for (auto sid : sessions) {
+		launchMainApp_(sid);
 	}
 }
