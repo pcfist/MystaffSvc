@@ -52,7 +52,7 @@ MystaffSvc::MystaffSvc(int argc, char* argv[]) : QtService(argc, argv, myService
 	settings.setValue("testKey", "TestValue");
 	mainAppPath_ = settings.value("MainAppPath").toString();
 
-	qDebug() << "Main app path is " << mainAppPath_;
+	qDebug() << "Main app path is" << mainAppPath_;
 
 	watchdogTimer_.setInterval(watchdogInterval);
 	QObject::connect(&watchdogTimer_, SIGNAL(timeout()), SLOT(onWatchdogTimeout_()));
@@ -69,13 +69,21 @@ void MystaffSvc::start()
 
 void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
 {
+	if (!running_)
+		return;
+
 	switch (eventType)
 	{
-	case QtServiceBase::Logon:
-		qDebug() << "session" << sessionId << "LOGGED ON";
-		if (running_)
-			launchMainApp_(sessionId);
-		break;
+	case QtServiceBase::Logon: {
+		auto pid = launchMainApp_(sessionId);
+		if (pid == LaunchFailed) {
+			qWarning() << "session" << sessionId << "LOGGED ON -> failed to launch main app";
+		} else if (pid != AlreadyRunning) {
+			qDebug() << "session" << sessionId << "LOGGED ON -> launched main app, pid =" << pid;
+		} else {
+			qDebug() << "session" << sessionId << "LOGGED ON";
+		}
+		} break;
 
 	case QtServiceBase::Logoff:
 		qDebug() << "session" << sessionId << "LOGGED OFF";
@@ -85,24 +93,30 @@ void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
 		qDebug() << "session" << sessionId << "LOCKED";
 		break;
 
-	case QtServiceBase::Unlock:
-		qDebug() << "session" << sessionId << "UNLOCKED";
-		if (running_)
-			launchMainApp_(sessionId);
-		break;
+	case QtServiceBase::Unlock: {
+		auto pid = launchMainApp_(sessionId);
+		if (pid == LaunchFailed) {
+			qWarning() << "session" << sessionId << "UNLOCKED -> failed to launch main app";
+		} else if (pid != AlreadyRunning) {
+			qDebug() << "session" << sessionId << "UNLOCKED -> launched main app, pid =" << pid;
+		} else {
+			qDebug() << "session" << sessionId << "UNLOCKED";
+		}
+		} break;
 
-	case QtServiceBase::ConnectConsole:
-		qDebug() << "session" << sessionId << "CONSOLE CONNECTED";
-		if (running_)
-			launchMainApp_(sessionId);
-		break;
+	case QtServiceBase::ConnectConsole: {
+		auto pid = launchMainApp_(sessionId);
+		if (pid == LaunchFailed) {
+			qWarning() << "session" << sessionId << "CONSOLE CONNECTED -> failed to launch main app";
+		} else if (pid != AlreadyRunning) {
+			qDebug() << "session" << sessionId << "CONSOLE CONNECTED -> launched main app, pid =" << pid;
+		} else {
+			qDebug() << "session" << sessionId << "CONSOLE CONNECTED";
+		}
+	} break;
 
 	case QtServiceBase::DisconnectConsole:
 		qDebug() << "session" << sessionId << "CONSOLE DISCONNECTED";
-		break;
-
-	default:
-		qDebug() << "session" << sessionId << " ???";
 		break;
 	}
 }
