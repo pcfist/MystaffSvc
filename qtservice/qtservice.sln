@@ -1,0 +1,69 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QtSolutions_Service-head", "buildlib\QtSolutions_Service-head.vcxproj", "{ADDD5199-44EB-3B97-B7C6-716FF0A56317}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "interactive", "examples\interactive\interactive.vcxproj", "{C63229DC-A8A5-389B-9A65-C3949394F7E4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{ADDD5199-44EB-3B97-B7C6-716FF0A56317} = {ADDD5199-44EB-3B97-B7C6-716FF0A56317}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "httpservice", "examples\server\httpservice.vcxproj", "{94390955-2BD4-3E38-908E-8A032518CB94}"
+	ProjectSection(ProjectDependencies) = postProject
+		{ADDD5199-44EB-3B97-B7C6-716FF0A56317} = {ADDD5199-44EB-3B97-B7C6-716FF0A56317}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "controller", "examples\controller\controller.vcxproj", "{7FF80DC6-38B2-30AF-915B-9D6A2C88F531}"
+	ProjectSection(ProjectDependencies) = postProject
+		{ADDD5199-44EB-3B97-B7C6-716FF0A56317} = {ADDD5199-44EB-3B97-B7C6-716FF0A56317}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ADDD5199-44EB-3B97-B7C6-716FF0A56317}.Debug|Win32.ActiveCfg = Debug|Win32
+		{ADDD5199-44EB-3B97-B7C6-716FF0A56317}.Debug|Win32.Build.0 = Debug|Win32
+		{ADDD5199-44EB-3B97-B7C6-716FF0A56317}.Debug|x64.ActiveCfg = Debug|x64
+		{ADDD5199-44EB-3B97-B7C6-716FF0A56317}.Debug|x64.Build.0 = Debug|x64
+		{ADDD5199-44EB-3B97-B7C6-716FF0A56317}.Release|Win32.ActiveCfg = Release|Win32
+		{ADDD5199-44EB-3B97-B7C6-716FF0A56317}.Release|Win32.Build.0 = Release|Win32
+		{ADDD5199-44EB-3B97-B7C6-716FF0A56317}.Release|x64.ActiveCfg = Release|x64
+		{ADDD5199-44EB-3B97-B7C6-716FF0A56317}.Release|x64.Build.0 = Release|x64
+		{C63229DC-A8A5-389B-9A65-C3949394F7E4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C63229DC-A8A5-389B-9A65-C3949394F7E4}.Debug|Win32.Build.0 = Debug|Win32
+		{C63229DC-A8A5-389B-9A65-C3949394F7E4}.Debug|x64.ActiveCfg = Debug|x64
+		{C63229DC-A8A5-389B-9A65-C3949394F7E4}.Debug|x64.Build.0 = Debug|x64
+		{C63229DC-A8A5-389B-9A65-C3949394F7E4}.Release|Win32.ActiveCfg = Release|Win32
+		{C63229DC-A8A5-389B-9A65-C3949394F7E4}.Release|Win32.Build.0 = Release|Win32
+		{C63229DC-A8A5-389B-9A65-C3949394F7E4}.Release|x64.ActiveCfg = Release|x64
+		{C63229DC-A8A5-389B-9A65-C3949394F7E4}.Release|x64.Build.0 = Release|x64
+		{94390955-2BD4-3E38-908E-8A032518CB94}.Debug|Win32.ActiveCfg = Debug|Win32
+		{94390955-2BD4-3E38-908E-8A032518CB94}.Debug|Win32.Build.0 = Debug|Win32
+		{94390955-2BD4-3E38-908E-8A032518CB94}.Debug|x64.ActiveCfg = Debug|x64
+		{94390955-2BD4-3E38-908E-8A032518CB94}.Debug|x64.Build.0 = Debug|x64
+		{94390955-2BD4-3E38-908E-8A032518CB94}.Release|Win32.ActiveCfg = Release|Win32
+		{94390955-2BD4-3E38-908E-8A032518CB94}.Release|Win32.Build.0 = Release|Win32
+		{94390955-2BD4-3E38-908E-8A032518CB94}.Release|x64.ActiveCfg = Release|x64
+		{94390955-2BD4-3E38-908E-8A032518CB94}.Release|x64.Build.0 = Release|x64
+		{7FF80DC6-38B2-30AF-915B-9D6A2C88F531}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7FF80DC6-38B2-30AF-915B-9D6A2C88F531}.Debug|Win32.Build.0 = Debug|Win32
+		{7FF80DC6-38B2-30AF-915B-9D6A2C88F531}.Debug|x64.ActiveCfg = Debug|x64
+		{7FF80DC6-38B2-30AF-915B-9D6A2C88F531}.Debug|x64.Build.0 = Debug|x64
+		{7FF80DC6-38B2-30AF-915B-9D6A2C88F531}.Release|Win32.ActiveCfg = Release|Win32
+		{7FF80DC6-38B2-30AF-915B-9D6A2C88F531}.Release|Win32.Build.0 = Release|Win32
+		{7FF80DC6-38B2-30AF-915B-9D6A2C88F531}.Release|x64.ActiveCfg = Release|x64
+		{7FF80DC6-38B2-30AF-915B-9D6A2C88F531}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		Qt5Version = $(DefaultQtVersion)
+	EndGlobalSection
+EndGlobal
