@@ -8,7 +8,6 @@
 #include <QCoreApplication>
 #include <QtService>
 #include <QSettings>
-#include <QProcess>
 #include <QTimer>
 
 
@@ -30,7 +29,6 @@ private:
 
 private:
 	QString mainAppPath_;
-	QProcess* mainAppProcess_;
 	QTimer watchdogTimer_;
 
 	bool running_ = false;
