@@ -37,3 +37,6 @@ Win?Release/*
 VistaDebug/*
 VistaRelease/*
 *.7z
+
+# Auto-generated files:
+mystaff-svc/svc_eventlog.h

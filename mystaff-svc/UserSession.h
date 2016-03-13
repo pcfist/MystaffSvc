@@ -51,6 +51,20 @@ public:
 public:
 	UserSession(sid_t sid) : mysid_(sid) {
 		::WTSQueryUserToken(mysid_, &myhandle_);
+
+		// Get session's user name.
+		DWORD level = 1;
+		WTS_SESSION_INFO_1* si = nullptr;
+		DWORD count = 0;
+		if (::WTSEnumerateSessionsEx(WTS_CURRENT_SERVER_HANDLE, &level, 0, &si, &count)) {
+			for (int i = 0; i < count; ++i) {
+				if (si[i].SessionId != mysid_)
+					continue;
+
+				myuserName_ = QString::fromWCharArray(si[i].pUserName);
+				break;
+			}
+		}
 	}
 
 	UserSession(const UserSession&) = delete;
@@ -135,28 +149,23 @@ public:
 	}
 
 	/**
+	 * Returns name of user logged into this session (if any).
+	 * @return	[const QString&]	- User name, or empty string if no user is associated with the session.
+	 */
+	const QString& userName() const {
+		return myuserName_;
+	}
+
+	/**
 	 * Returns true if a user is logged on to this session.
 	 * @return	[bool]	- true if session is associated with user.
 	 */
 	bool isDesktopSession() const {
-		DWORD level = 1;
-		WTS_SESSION_INFO_1* si = nullptr;
-		DWORD count = 0;
-		if (!::WTSEnumerateSessionsEx(WTS_CURRENT_SERVER_HANDLE, &level, 0, &si, &count))
-			return true;
-
-		auto siGuard = make_scope_guard([si, count]{ ::WTSFreeMemoryEx(WTSTypeSessionInfoLevel1, si, count); });
-
-		for (DWORD i = 0; i < count; ++i) {
-			//qDebug() << " - sid" << si[i]. << "name =" << si[i].pSessionName << "username =" << si[i].pUserName;
-			if (si[i].SessionId == mysid_)
-				return si[i].pUserName != nullptr;
-		}
-
-		return true;
+		return !myuserName_.isEmpty();
 	}
 
 protected:
 	sid_t mysid_ = 0;
 	HANDLE myhandle_ = 0;
+	QString myuserName_;
 };

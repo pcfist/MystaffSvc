@@ -11,6 +11,7 @@
 #include <QTimer>
 
 #include "process_tools.hxx"
+#include "EventLog.h"
 
 
 class MystaffSvc : public QObject, public QtService<QCoreApplication>
@@ -20,6 +21,7 @@ public:
 	MystaffSvc(int argc, char* argv[]);
 
 	void start() override;
+	void stop() override;
 
 	void onSessionChange(LogonEvent eventType, intptr_t sessionId) override;
 
@@ -35,6 +37,7 @@ private:
 	};
 
 private:
+	EventLogSource mylog_;
 	QString mainAppPath_;
 	QTimer watchdogTimer_;
 	// Mutex held when launching main application to avoid race conditions.

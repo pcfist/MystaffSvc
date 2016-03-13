@@ -8,6 +8,21 @@
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>psapi.lib;wtsapi32.lib;userenv.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <ClCompile />
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup />
+  <ItemGroup>
+    <CustomBuild Include="*.mc">
+      <FileType>Document</FileType>
+      <Command>mc -A -b -c -h $(ProjectDir) -r $(IntDir) %(Filename).mc</Command>
+      <Message>Compiling mesage file...</Message>
+      <Outputs>$(Filename).bin</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <PropertyGroup>
+    <CustomBuildBeforeTargets>ClCompile</CustomBuildBeforeTargets>
+  </PropertyGroup>
 </Project>
