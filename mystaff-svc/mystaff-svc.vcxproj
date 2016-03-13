@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="debug.h" />
+    <ClInclude Include="EventLog.h" />
     <ClInclude Include="process_tools.hxx" />
     <ClInclude Include="scope_guard.hxx" />
     <ClInclude Include="UserSession.h" />
