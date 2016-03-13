@@ -21,6 +21,7 @@ public:
 	MystaffSvc(int argc, char* argv[]);
 
 	void start() override;
+	void stop() override;
 
 	void onSessionChange(LogonEvent eventType, intptr_t sessionId) override;
 

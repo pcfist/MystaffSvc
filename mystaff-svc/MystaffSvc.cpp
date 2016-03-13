@@ -68,6 +68,14 @@ void MystaffSvc::start()
 	watchdogTimer_.start();
 }
 
+void MystaffSvc::stop()
+{
+	watchdogTimer_.stop();
+	running_ = false;
+
+	mylog_.logMessage(EVENTLOG_INFORMATION_TYPE, MYSTAFF_MSG_SHUTDOWN);
+}
+
 void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
 {
 	if (!running_)
