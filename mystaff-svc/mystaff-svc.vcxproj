@@ -55,6 +55,7 @@
     <ClInclude Include="debug.h" />
     <ClInclude Include="EventLog.h" />
     <ClInclude Include="process_tools.hxx" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="scope_guard.hxx" />
     <ClInclude Include="UserSession.h" />
   </ItemGroup>
@@ -62,6 +63,9 @@
     <ProjectReference Include="..\QtService\buildlib\QtSolutions_Service-head.vcxproj">
       <Project>{bb46ea52-8b26-3e0c-b53a-8b2f61afd9da}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MystaffSvc.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B12702AD-ABFB-343A-A199-8E24837244A3}</ProjectGuid>
