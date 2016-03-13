@@ -11,6 +11,7 @@
 #include <QTimer>
 
 #include "process_tools.hxx"
+#include "EventLog.h"
 
 
 class MystaffSvc : public QObject, public QtService<QCoreApplication>
@@ -35,6 +36,7 @@ private:
 	};
 
 private:
+	EventLogSource mylog_;
 	QString mainAppPath_;
 	QTimer watchdogTimer_;
 	// Mutex held when launching main application to avoid race conditions.

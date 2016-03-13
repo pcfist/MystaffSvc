@@ -37,7 +37,7 @@ HANDLE getProcessByExecutableName(const QString& path)
 	return 0;
 }
 
-MystaffSvc::MystaffSvc(int argc, char* argv[]) : QtService(argc, argv, myServiceName)
+MystaffSvc::MystaffSvc(int argc, char* argv[]) : QtService(argc, argv, myServiceName), mylog_("MystaffSvc")
 {
 	QCoreApplication::setOrganizationName("TimeDoctorLLC");
 	QCoreApplication::setOrganizationDomain("mystaff.com");
@@ -61,8 +61,9 @@ MystaffSvc::MystaffSvc(int argc, char* argv[]) : QtService(argc, argv, myService
 
 void MystaffSvc::start()
 {
-	running_ = true;
+	mylog_.logMessage(EVENTLOG_INFORMATION_TYPE, MYSTAFF_MSG_STARTUP);
 
+	running_ = true;
 	launchMainApp_(UserSession::getActiveSessionId());
 	watchdogTimer_.start();
 }
@@ -145,7 +146,13 @@ pid_t MystaffSvc::launchMainApp_(intptr_t sessionId)
 	}
 	else
 	{
-		return s.startProcess(mainAppPath_);
+		auto pid = s.startProcess(mainAppPath_);
+
+		if (pid)
+			mylog_.logMessage(EVENTLOG_SUCCESS, MYSTAFF_MSG_MAIN_APP_STARTED, QString::number(sessionId), s.userName(), QString::number(pid));
+		else
+			mylog_.logMessage(EVENTLOG_WARNING_TYPE, MYSTAFF_MSG_MAIN_APP_START_FAILED, QString::number(sessionId), s.userName(), QString::number(GetLastError()));
+		return pid;
 	}
 }
 
