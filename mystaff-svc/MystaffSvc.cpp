@@ -1,3 +1,8 @@
+/**
+ * @file MystaffSvc.h 
+ * MystaffSvc system service class implementation.
+ * @author pcfist	@date 2016.03.01
+ */
 #include "MystaffSvc.h"
 
 #include <QFileInfo>
@@ -43,8 +48,10 @@ MystaffSvc::MystaffSvc(int argc, char* argv[]) : QtService(argc, argv, myService
 	QCoreApplication::setOrganizationDomain("mystaff.com");
 	QCoreApplication::setApplicationName("MystaffSvc");
 
+	// Set service description displayed in the UI.
 	setServiceDescription("Mystaff Service");
 
+	// Get service settings, use system-wide storage.
 	QSettings settings(QSettings::SystemScope, "TimeDoctorLLC");
 	settings.setValue("testKey", "TestValue");
 	mainAppPath_ = settings.value("MainAppPath").toString();

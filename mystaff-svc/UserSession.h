@@ -81,6 +81,11 @@ public:
 		return myhandle_ != 0;
 	}
 
+	/**
+	 * Starts the process in user session.
+	 * @param[in]	targetPath	- Path to the executable file.
+	 * @return	[pid_t]	- New process ID or 0 if the process failed to start.
+	 */
 	pid_t startProcess(const QString& targetPath) {
 		STARTUPINFO si = {};
 		si.cb = sizeof si;
