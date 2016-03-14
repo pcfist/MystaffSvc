@@ -32,38 +32,6 @@ HANDLE currentModule() { return _thisModule; }
 
 
 /**
- * Enables debug privilege for current process.
- * @return	[bool]	- true if successful.
- */
-inline
-bool getDebugPrivilege()
-{
-	HANDLE hToken;
-	if (!::OpenProcessToken(::GetCurrentProcess(), TOKEN_READ | TOKEN_WRITE, &hToken))
-		return false;
-	
-	// Make sure we always close the handle.
-	auto handleGuard = make_scope_guard([hToken]{ ::CloseHandle(hToken); });
-	
-	LUID luID;
-	if (!::LookupPrivilegeValue(NULL, TEXT("SeDebugPrivilege"), &luID))
-		return false;
-
-	TOKEN_PRIVILEGES tp = {};
-	tp.PrivilegeCount = 1;
-	tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
-	tp.Privileges[0].Luid = luID;
-
-	if (!AdjustTokenPrivileges(hToken, FALSE, &tp, sizeof(TOKEN_PRIVILEGES), NULL, NULL))
-		return false;
-	if (GetLastError() != ERROR_SUCCESS)
-		return false;
-
-	return true;
-}
-
-
-/**
  * Returns handle to specified module in context of remote process.
  * @param[in]	hProcess	- Remote process handle.
  * @param[in]	dllPath	- Path to target module.
