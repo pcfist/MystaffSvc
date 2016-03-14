@@ -72,3 +72,32 @@ QString getProcessImagePath(HANDLE hProcess)
 	return QString::fromStdWString(path);
 }
 
+
+/**
+ * Gets the process by executable image path.
+ * @param[in]	path	- Full path to the executable file.
+ * @return	[HANDLE]	- Process handle or 0 if process was not found.
+ */
+inline
+HANDLE getProcessByExecutableName(const QString& path)
+{
+	DWORD pidArray[1024];
+	DWORD bytesReturned;
+	if (!EnumProcesses(pidArray, sizeof pidArray, &bytesReturned))
+		return 0;
+
+	int processCount = bytesReturned/sizeof *pidArray;
+	for (int i = 0; i < processCount; ++i) {
+		HANDLE proc = ::OpenProcess(PROCESS_QUERY_INFORMATION, false, pidArray[i]);
+		if (!proc)
+			continue;
+
+		QString imagePath = getProcessImagePath(proc);
+		if (imagePath == path)
+			return proc;
+
+		::CloseHandle(proc);
+	}
+
+	return 0;
+}

@@ -19,28 +19,6 @@
 /*static*/
 const char MystaffSvc::myServiceName[] = "MyStaff Service";
 
-HANDLE getProcessByExecutableName(const QString& path)
-{
-	DWORD pidArray[1024];
-	DWORD bytesReturned;
-	if (!EnumProcesses(pidArray, sizeof pidArray, &bytesReturned))
-		return 0;
-
-	int processCount = bytesReturned/sizeof *pidArray;
-	for (int i = 0; i < processCount; ++i) {
-		HANDLE proc = ::OpenProcess(PROCESS_QUERY_INFORMATION, false, pidArray[i]);
-		if (!proc)
-			continue;
-
-		QString imagePath = getProcessImagePath(proc);
-		if (imagePath == path)
-			return proc;
-
-		::CloseHandle(proc);
-	}
-
-	return 0;
-}
 
 MystaffSvc::MystaffSvc(int argc, char* argv[]) : QtService(argc, argv, myServiceName), mylog_("MystaffSvc")
 {
