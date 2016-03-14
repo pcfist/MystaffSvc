@@ -18,94 +18,6 @@ typedef DWORD	pid_t;
 typedef DWORD	sid_t;
 
 
-__declspec(selectany)
-HANDLE _thisProcess = ::GetCurrentProcess();
-
-__declspec(selectany)
-HMODULE _thisModule = ::GetModuleHandle(nullptr);
-
-inline
-HANDLE currentProcess() { return _thisProcess; }
-
-inline
-HANDLE currentModule() { return _thisModule; }
-
-
-/**
- * Enables debug privilege for current process.
- * @return	[bool]	- true if successful.
- */
-inline
-bool getDebugPrivilege()
-{
-	HANDLE hToken;
-	if (!::OpenProcessToken(::GetCurrentProcess(), TOKEN_READ | TOKEN_WRITE, &hToken))
-		return false;
-	
-	// Make sure we always close the handle.
-	auto handleGuard = make_scope_guard([hToken]{ ::CloseHandle(hToken); });
-	
-	LUID luID;
-	if (!::LookupPrivilegeValue(NULL, TEXT("SeDebugPrivilege"), &luID))
-		return false;
-
-	TOKEN_PRIVILEGES tp = {};
-	tp.PrivilegeCount = 1;
-	tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
-	tp.Privileges[0].Luid = luID;
-
-	if (!AdjustTokenPrivileges(hToken, FALSE, &tp, sizeof(TOKEN_PRIVILEGES), NULL, NULL))
-		return false;
-	if (GetLastError() != ERROR_SUCCESS)
-		return false;
-
-	return true;
-}
-
-
-/**
- * Returns handle to specified module in context of remote process.
- * @param[in]	hProcess	- Remote process handle.
- * @param[in]	dllPath	- Path to target module.
- * @return	[HMODULE]	- Handle to target module in context of remote process.
- */
-inline
-HMODULE getRemoteDllModuleHandle(HANDLE hProcess, const wchar_t* dllPath)
-{
-	DWORD bytesNeeded = 0;
-
-#ifdef _WIN64
-	const DWORD flags = LIST_MODULES_ALL;
-#else
-	const DWORD flags = LIST_MODULES_DEFAULT;
-#endif // _WIN64
-
-	// Get module list size.
-	EnumProcessModulesEx(hProcess, nullptr, 0, &bytesNeeded, flags);
-
-	int moduleCount = bytesNeeded / sizeof(HMODULE);
-	HMODULE* moduleArray = new HMODULE[moduleCount];
-	auto memGuard = make_scope_guard([moduleArray]{ delete[] moduleArray; });
-
-	// Get module list & find target module.
-	if (EnumProcessModulesEx(hProcess, moduleArray, bytesNeeded, &bytesNeeded, LIST_MODULES_ALL))
-	{
-		for (int i = 0; i < moduleCount; ++i)
-		{
-			wchar_t strBuffer[MAX_PATH];
-			GetModuleFileNameExW(hProcess, moduleArray[i], strBuffer, ARRAYSIZE(strBuffer));
-			if (wcsstr(strBuffer, dllPath))
-			{
-				MODULEINFO mi;
-				::GetModuleInformation(hProcess, moduleArray[i], &mi, sizeof mi);
-				return (HMODULE)mi.lpBaseOfDll;
-			}
-		}
-	}
-
-	return 0;
-}
-
 /**
  * Creates child process with specified command line.
  * @param[in]	executablePath	- Path to executable to be launched.
@@ -135,52 +47,6 @@ HANDLE createProcess(const wchar_t* executablePath, wchar_t* cmdLine, bool invis
 
 
 /**
- * Returns full path name to specified file.
- * @param[in]	fileName	- File name.
- * @return	[std::wstring]	- Full path to the file.
- */
-inline
-std::wstring getFullPathName(const wchar_t* fileName)
-{
-	std::wstring fullPath;
-	wchar_t* name;
-	DWORD pathLen = ::GetFullPathName(fileName, (DWORD)fullPath.length(), const_cast<wchar_t*>(fullPath.c_str()), &name);
-	if (pathLen > 0)
-	{
-		fullPath.resize(pathLen);
-		::GetFullPathName(fileName, (DWORD)fullPath.length(), const_cast<wchar_t*>(fullPath.c_str()), &name);
-	}
-
-	return fullPath;
-}
-
-/**
- * Returns short path name to specified file.
- * @param[in]	fileName	- File name.
- * @return	[std::wstring]	- Short path to the file.
- */
-inline
-std::wstring getShortPathName(const wchar_t* fileName)
-{
-	std::wstring shortPath;
-	DWORD pathLen = ::GetShortPathName(fileName, const_cast<wchar_t*>(shortPath.c_str()), 0);
-	if (pathLen > 0)
-	{
-		shortPath.resize(pathLen);
-		::GetShortPathName(fileName, const_cast<wchar_t*>(shortPath.c_str()), pathLen);
-		if (shortPath[pathLen - 1] == L'\0')
-			shortPath.pop_back();
-	}
-	else
-	{
-		shortPath = fileName;
-	}
-
-	return shortPath;
-}
-
-
-/**
  * Returns full process image path.
  * @param[in]	hProcess	- Handle to process.
  * @return	[QString]	- Process image path.
@@ -206,3 +72,32 @@ QString getProcessImagePath(HANDLE hProcess)
 	return QString::fromStdWString(path);
 }
 
+
+/**
+ * Gets the process by executable image path.
+ * @param[in]	path	- Full path to the executable file.
+ * @return	[HANDLE]	- Process handle or 0 if process was not found.
+ */
+inline
+HANDLE getProcessByExecutableName(const QString& path)
+{
+	DWORD pidArray[1024];
+	DWORD bytesReturned;
+	if (!EnumProcesses(pidArray, sizeof pidArray, &bytesReturned))
+		return 0;
+
+	int processCount = bytesReturned/sizeof *pidArray;
+	for (int i = 0; i < processCount; ++i) {
+		HANDLE proc = ::OpenProcess(PROCESS_QUERY_INFORMATION, false, pidArray[i]);
+		if (!proc)
+			continue;
+
+		QString imagePath = getProcessImagePath(proc);
+		if (imagePath == path)
+			return proc;
+
+		::CloseHandle(proc);
+	}
+
+	return 0;
+}

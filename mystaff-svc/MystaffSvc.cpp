@@ -1,3 +1,8 @@
+/**
+ * @file MystaffSvc.h 
+ * MystaffSvc system service class implementation.
+ * @author pcfist	@date 2016.03.01
+ */
 #include "MystaffSvc.h"
 
 #include <QFileInfo>
@@ -14,28 +19,6 @@
 /*static*/
 const char MystaffSvc::myServiceName[] = "MyStaff Service";
 
-HANDLE getProcessByExecutableName(const QString& path)
-{
-	DWORD pidArray[1024];
-	DWORD bytesReturned;
-	if (!EnumProcesses(pidArray, sizeof pidArray, &bytesReturned))
-		return 0;
-
-	int processCount = bytesReturned/sizeof *pidArray;
-	for (int i = 0; i < processCount; ++i) {
-		HANDLE proc = ::OpenProcess(PROCESS_QUERY_INFORMATION, false, pidArray[i]);
-		if (!proc)
-			continue;
-
-		QString imagePath = getProcessImagePath(proc);
-		if (imagePath == path)
-			return proc;
-
-		::CloseHandle(proc);
-	}
-
-	return 0;
-}
 
 MystaffSvc::MystaffSvc(int argc, char* argv[]) : QtService(argc, argv, myServiceName), mylog_("MystaffSvc")
 {
@@ -43,11 +26,10 @@ MystaffSvc::MystaffSvc(int argc, char* argv[]) : QtService(argc, argv, myService
 	QCoreApplication::setOrganizationDomain("mystaff.com");
 	QCoreApplication::setApplicationName("MystaffSvc");
 
+	// Set service description displayed in the UI.
 	setServiceDescription("Mystaff Service");
 
-	// Add debug privilege to access the process information.
-	getDebugPrivilege();
-
+	// Get service settings, use system-wide storage.
 	QSettings settings(QSettings::SystemScope, "TimeDoctorLLC");
 	settings.setValue("testKey", "TestValue");
 	mainAppPath_ = settings.value("MainAppPath").toString();
@@ -85,13 +67,7 @@ void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
 	{
 	case QtServiceBase::Logon: {
 		auto pid = launchMainApp_(sessionId);
-		if (pid == LaunchFailed) {
-			qWarning() << "session" << sessionId << "LOGGED ON -> failed to launch main app";
-		} else if (pid != AlreadyRunning) {
-			qDebug() << "session" << sessionId << "LOGGED ON -> launched main app, pid =" << pid;
-		} else {
-			qDebug() << "session" << sessionId << "LOGGED ON";
-		}
+		reportAppLaunchResult_(sessionId, pid, "LOGGED ON");
 		} break;
 
 	case QtServiceBase::Logoff:
@@ -104,24 +80,12 @@ void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
 
 	case QtServiceBase::Unlock: {
 		auto pid = launchMainApp_(sessionId);
-		if (pid == LaunchFailed) {
-			qWarning() << "session" << sessionId << "UNLOCKED -> failed to launch main app";
-		} else if (pid != AlreadyRunning) {
-			qDebug() << "session" << sessionId << "UNLOCKED -> launched main app, pid =" << pid;
-		} else {
-			qDebug() << "session" << sessionId << "UNLOCKED";
-		}
+		reportAppLaunchResult_(sessionId, pid, "UNLOCKED");
 		} break;
 
 	case QtServiceBase::ConnectConsole: {
 		auto pid = launchMainApp_(sessionId);
-		if (pid == LaunchFailed) {
-			qWarning() << "session" << sessionId << "CONSOLE CONNECTED -> failed to launch main app";
-		} else if (pid != AlreadyRunning) {
-			qDebug() << "session" << sessionId << "CONSOLE CONNECTED -> launched main app, pid =" << pid;
-		} else {
-			qDebug() << "session" << sessionId << "CONSOLE CONNECTED";
-		}
+		reportAppLaunchResult_(sessionId, pid, "CONSOLE CONNECTED");
 	} break;
 
 	case QtServiceBase::DisconnectConsole:
@@ -161,6 +125,17 @@ pid_t MystaffSvc::launchMainApp_(intptr_t sessionId)
 		else
 			mylog_.logMessage(EVENTLOG_WARNING_TYPE, MYSTAFF_MSG_MAIN_APP_START_FAILED, QString::number(sessionId), s.userName(), QString::number(GetLastError()));
 		return pid;
+	}
+}
+
+void MystaffSvc::reportAppLaunchResult_(sid_t sid, pid_t result, const char* message)
+{
+	if (result == LaunchFailed) {
+		qWarning() << "session" << sid << message << "-> failed to launch main app";
+	} else if (result != AlreadyRunning) {
+		qDebug() << "session" << sid << message << "-> launched main app, pid =" << result;
+	} else {
+		qDebug() << "session" << sid << message;
 	}
 }
 

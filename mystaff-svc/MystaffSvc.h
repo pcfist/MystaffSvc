@@ -23,17 +23,22 @@ public:
 	void start() override;
 	void stop() override;
 
+	/**
+	 * Logon event handler.
+	 * @param[in]	eventType	- Logon event type.
+	 * @param[in]	sessionId	- User session ID.
+	 */
 	void onSessionChange(LogonEvent eventType, intptr_t sessionId) override;
 
 private:
 	static
 	const char myServiceName[];
 
-	static const int watchdogInterval = 3000;	// [ms]
+	static const int watchdogInterval = 3000;	// Main process check interval [ms]
 
 	enum AppLaunchResult {
-		LaunchFailed = 0,
-		AlreadyRunning = (pid_t)(-1),
+		LaunchFailed = 0,	// An error occurred when launching the process.
+		AlreadyRunning = (pid_t)(-1),	// Process is already running.
 	};
 
 private:
@@ -46,7 +51,21 @@ private:
 	bool running_ = false;
 
 
+	/**
+	 * Runs main application in the specified user session.
+	 * @param[in]	sessionId	- User session ID.
+	 * @return	[pid_t]	- Process ID if launched successfully or one of AppLaunchResult enum values.
+	 * @see AppLaunchResult
+	 */
 	pid_t launchMainApp_(intptr_t sessionId);
+
+	/**
+	 * Writes debug log message about main process launch attempt.
+	 * @param[in]	sid	- User session ID.
+	 * @param[in]	result	- Process launch result (PID) as returned by UserSession::startProcess().
+	 * @param[in]	message	- Event message.
+	 */
+	void reportAppLaunchResult_(sid_t sid, pid_t result, const char* message);
 
 private slots:
 	/**

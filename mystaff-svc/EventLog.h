@@ -18,6 +18,11 @@ class EventLogSource
 public:
 	EventLogSource(const QString& srcName) : myname_(srcName)
 	{
+		/*
+		 * Set up registry values that describe messages for our event source.
+		 * It's better to have it done in the installer, but we can still write
+		 * these values here just to be sure.
+		 */
 		QString regPath = "SYSTEM\\CurrentControlSet\\Services\\EventLog\\Application\\" + myname_;
 
 		HKEY hk = 0;
@@ -32,12 +37,19 @@ public:
 			::RegCloseKey(hk);
 		}
 
+		// Register the event source.
 		myhandle_ = ::RegisterEventSource(nullptr, myname_.toStdWString().c_str());
 	}
 
 	~EventLogSource() {
 		if (myhandle_)
 			::DeregisterEventSource(myhandle_);
+
+		/*
+		 * Don't clean up the registry values we added at construction so that
+		 * user can read our messages properly even when our service is not running.
+		 * The clean-up should be done in the uninstaller.
+		 */
 	}
 
 	template <class... Args>
