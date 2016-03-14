@@ -59,6 +59,14 @@ private:
 	 */
 	pid_t launchMainApp_(intptr_t sessionId);
 
+	/**
+	 * Writes debug log message about main process launch attempt.
+	 * @param[in]	sid	- User session ID.
+	 * @param[in]	result	- Process launch result (PID) as returned by UserSession::startProcess().
+	 * @param[in]	message	- Event message.
+	 */
+	void reportAppLaunchResult_(sid_t sid, pid_t result, const char* message);
+
 private slots:
 	/**
 	 * Watchdog timer callback.

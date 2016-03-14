@@ -67,13 +67,7 @@ void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
 	{
 	case QtServiceBase::Logon: {
 		auto pid = launchMainApp_(sessionId);
-		if (pid == LaunchFailed) {
-			qWarning() << "session" << sessionId << "LOGGED ON -> failed to launch main app";
-		} else if (pid != AlreadyRunning) {
-			qDebug() << "session" << sessionId << "LOGGED ON -> launched main app, pid =" << pid;
-		} else {
-			qDebug() << "session" << sessionId << "LOGGED ON";
-		}
+		reportAppLaunchResult_(sessionId, pid, "LOGGED ON");
 		} break;
 
 	case QtServiceBase::Logoff:
@@ -86,24 +80,12 @@ void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
 
 	case QtServiceBase::Unlock: {
 		auto pid = launchMainApp_(sessionId);
-		if (pid == LaunchFailed) {
-			qWarning() << "session" << sessionId << "UNLOCKED -> failed to launch main app";
-		} else if (pid != AlreadyRunning) {
-			qDebug() << "session" << sessionId << "UNLOCKED -> launched main app, pid =" << pid;
-		} else {
-			qDebug() << "session" << sessionId << "UNLOCKED";
-		}
+		reportAppLaunchResult_(sessionId, pid, "UNLOCKED");
 		} break;
 
 	case QtServiceBase::ConnectConsole: {
 		auto pid = launchMainApp_(sessionId);
-		if (pid == LaunchFailed) {
-			qWarning() << "session" << sessionId << "CONSOLE CONNECTED -> failed to launch main app";
-		} else if (pid != AlreadyRunning) {
-			qDebug() << "session" << sessionId << "CONSOLE CONNECTED -> launched main app, pid =" << pid;
-		} else {
-			qDebug() << "session" << sessionId << "CONSOLE CONNECTED";
-		}
+		reportAppLaunchResult_(sessionId, pid, "CONSOLE CONNECTED");
 	} break;
 
 	case QtServiceBase::DisconnectConsole:
@@ -143,6 +125,17 @@ pid_t MystaffSvc::launchMainApp_(intptr_t sessionId)
 		else
 			mylog_.logMessage(EVENTLOG_WARNING_TYPE, MYSTAFF_MSG_MAIN_APP_START_FAILED, QString::number(sessionId), s.userName(), QString::number(GetLastError()));
 		return pid;
+	}
+}
+
+void MystaffSvc::reportAppLaunchResult_(sid_t sid, pid_t result, const char* message)
+{
+	if (result == LaunchFailed) {
+		qWarning() << "session" << sid << message << "-> failed to launch main app";
+	} else if (result != AlreadyRunning) {
+		qDebug() << "session" << sid << message << "-> launched main app, pid =" << result;
+	} else {
+		qDebug() << "session" << sid << message;
 	}
 }
 
