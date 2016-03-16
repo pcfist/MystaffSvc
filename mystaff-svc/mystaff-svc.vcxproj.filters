@@ -34,9 +34,6 @@
     <ClCompile Include="MystaffSvc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="debug.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_MystaffSvc.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -52,9 +49,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="process_tools.hxx">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UserSession.h">
