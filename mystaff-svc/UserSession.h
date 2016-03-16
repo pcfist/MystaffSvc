@@ -89,7 +89,7 @@ public:
 	pid_t startProcess(const QString& targetPath) {
 		STARTUPINFO si = {};
 		si.cb = sizeof si;
-		si.lpDesktop = L"";
+        si.lpDesktop = const_cast<wchar_t*>(L"");
 
 		QFileInfo fi(targetPath);
 

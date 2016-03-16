@@ -5,16 +5,9 @@
  */
 #include "MystaffSvc.h"
 
-#include "debug.h"
-
 
 int main(int argc, char *argv[])
 {
-	qInstallMessageHandler(messageHandler);
-
-// 	while (!IsDebuggerPresent())
-// 		::Sleep(500);
-
 	MystaffSvc svc(argc, argv);
 	return svc.exec();
 }

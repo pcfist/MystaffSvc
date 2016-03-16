@@ -40,3 +40,8 @@ VistaRelease/*
 
 # Auto-generated files:
 mystaff-svc/svc_eventlog.h
+mystaff-svc/svc_eventlog.rc
+mystaff-svc/svc_eventlog_MSG00000.bin
+
+# QtCreator build dirs
+build*/

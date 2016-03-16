@@ -34,9 +34,6 @@
     <ClCompile Include="MystaffSvc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="debug.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_MystaffSvc.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -48,13 +45,10 @@
     <CustomBuild Include="MystaffSvc.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="svc_eventlog.mc" />
+    <CustomBuild Include="*.mc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="process_tools.hxx">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UserSession.h">
