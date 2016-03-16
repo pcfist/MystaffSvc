@@ -668,7 +668,9 @@ DWORD WINAPI QtServiceSysPrivate::handlerEx(DWORD dwControl, DWORD dwEventType, 
 		if (sessionChangeHandler_(dwEventType, eventData))
 			instance->condition.wait(&instance->mutex);
 
+#ifdef QTSERVICE_DEBUG
 		qDebug() << "*** session change event" << dwEventType << ", sid =" << eventData->dwSessionId;
+#endif // QTSERVICE_DEBUG
 
 		++handled;
 		} break; // SERVICE_CONTROL_SESSIONCHANGE
