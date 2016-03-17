@@ -4,8 +4,7 @@ QT += core
 CONFIG += console qt
 INCLUDEPATH += .
 	
-HEADERS += ./debug.h \
-    ./EventLog.h \
+HEADERS += ./EventLog.h \
     ./process_tools.hxx \
     ./resource.h \
     ./scope_guard.hxx \
