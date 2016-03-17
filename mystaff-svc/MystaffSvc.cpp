@@ -22,7 +22,7 @@ const char MystaffSvc::myServiceName[] = "MyStaff Service";
 
 MystaffSvc::MystaffSvc(int argc, char* argv[]) : QtService(argc, argv, myServiceName), mylog_("MystaffSvc"), running_(false)
 {
-	QCoreApplication::setOrganizationName("TimeDoctorLLC");
+	QCoreApplication::setOrganizationName("TimeDoctor LLC");
 	QCoreApplication::setOrganizationDomain("mystaff.com");
 	QCoreApplication::setApplicationName("MystaffSvc");
 
@@ -30,8 +30,7 @@ MystaffSvc::MystaffSvc(int argc, char* argv[]) : QtService(argc, argv, myService
 	setServiceDescription("Mystaff Service");
 
 	// Get service settings, use system-wide storage.
-	QSettings settings(QSettings::SystemScope, "TimeDoctorLLC");
-	settings.setValue("testKey", "TestValue");
+	QSettings settings(QSettings::SystemScope, "TimeDoctor LLC", "MystaffSvc");
 	mainAppPath_ = settings.value("MainAppPath").toString();
 
 	watchdogTimer_.setInterval(watchdogInterval);

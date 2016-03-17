@@ -31,7 +31,7 @@ MystaffSvc -u
 ###Configuration
 The service configuration values are stored in the Windows registry:
 ```
-HKEY_LOCAL_MACHINE\SOFTWARE\[Wow6432Node\]TimeDoctorLLC\OrganizationDefaults\
+HKEY_LOCAL_MACHINE\SOFTWARE\[Wow6432Node\]TimeDoctor LLC\MystaffSvc\
 ```
 (The `Wow6432Node` part should be used when running 32-bit service on 64-bit operating system.)
 
