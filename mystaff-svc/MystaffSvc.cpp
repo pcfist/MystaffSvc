@@ -20,7 +20,7 @@
 const char MystaffSvc::myServiceName[] = "MyStaff Service";
 
 
-MystaffSvc::MystaffSvc(int argc, char* argv[]) : QtService(argc, argv, myServiceName), mylog_("MystaffSvc")
+MystaffSvc::MystaffSvc(int argc, char* argv[]) : QtService(argc, argv, myServiceName), mylog_("MystaffSvc"), running_(false)
 {
 	QCoreApplication::setOrganizationName("TimeDoctorLLC");
 	QCoreApplication::setOrganizationDomain("mystaff.com");
@@ -120,10 +120,15 @@ pid_t MystaffSvc::launchMainApp_(intptr_t sessionId)
 	{
 		auto pid = s.startProcess(mainAppPath_);
 
-		if (pid)
-			mylog_.logMessage(EVENTLOG_SUCCESS, MYSTAFF_MSG_MAIN_APP_STARTED, QString::number(sessionId), s.userName(), QString::number(pid));
+		if (pid) {
+			QString args[] = { QString::number(sessionId), s.userName(), QString::number(pid) };
+			mylog_.logMessage(EVENTLOG_SUCCESS, MYSTAFF_MSG_MAIN_APP_STARTED, args);
+		}
 		else
-			mylog_.logMessage(EVENTLOG_WARNING_TYPE, MYSTAFF_MSG_MAIN_APP_START_FAILED, QString::number(sessionId), s.userName(), QString::number(GetLastError()));
+		{
+			QString args[] = { QString::number(sessionId), s.userName(), QString::number(GetLastError()) };
+			mylog_.logMessage(EVENTLOG_WARNING_TYPE, MYSTAFF_MSG_MAIN_APP_START_FAILED, args);
+		}
 		return pid;
 	}
 }
@@ -143,13 +148,13 @@ void MystaffSvc::onWatchdogTimeout_()
 {
 	auto sessions = UserSession::getSessionIDs();
 
-	for (auto sid : sessions) {
-		auto result = launchMainApp_(sid);
+	for (int i = 0; i < sessions.size(); ++i) {
+		auto result = launchMainApp_(sessions[i]);
 
 		if (result == LaunchFailed) {
-			qWarning() << "Could not start main application in session" << sid;
+			qWarning() << "Could not start main application in session" << sessions[i];
 		} else if (result != AlreadyRunning) {
-			qDebug() << "Main application not found in session" << sid << "-> launched successfully, pid =" << result;
+			qDebug() << "Main application not found in session" << sessions[i] << "-> launched successfully, pid =" << result;
 		}
 	}
 }

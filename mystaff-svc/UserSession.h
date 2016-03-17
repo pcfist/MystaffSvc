@@ -49,7 +49,8 @@ public:
 	}
 
 public:
-	UserSession(sid_t sid) : mysid_(sid) {
+	UserSession(sid_t sid) : mysid_(sid), myhandle_(0)
+	{
 		::WTSQueryUserToken(mysid_, &myhandle_);
 
 		// Get session's user name.
@@ -67,7 +68,6 @@ public:
 		}
 	}
 
-	UserSession(const UserSession&) = delete;
 	UserSession(UserSession&& other) : mysid_(other.mysid_), myhandle_(other.myhandle_) {
 		other.myhandle_ = 0;
 	}
@@ -170,7 +170,11 @@ public:
 	}
 
 protected:
-	sid_t mysid_ = 0;
-	HANDLE myhandle_ = 0;
+	sid_t mysid_;
+	HANDLE myhandle_;
 	QString myuserName_;
+
+private:
+	// DELETED
+	UserSession(const UserSession&);
 };

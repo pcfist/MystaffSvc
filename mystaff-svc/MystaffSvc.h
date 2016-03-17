@@ -48,7 +48,7 @@ private:
 	// Mutex held when launching main application to avoid race conditions.
 	QMutex watchdogMutex_;
 
-	bool running_ = false;
+	bool running_;
 
 
 	/**

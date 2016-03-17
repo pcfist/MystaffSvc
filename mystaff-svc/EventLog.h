@@ -16,7 +16,7 @@
 class EventLogSource
 {
 public:
-	EventLogSource(const QString& srcName) : myname_(srcName)
+	EventLogSource(const QString& srcName) : myhandle_(0), myname_(srcName)
 	{
 		/*
 		 * Set up registry values that describe messages for our event source.
@@ -52,17 +52,18 @@ public:
 		 */
 	}
 
-	template <class... Args>
-	void logMessage(DWORD type, DWORD eventID, Args&&... args) {
-		std::wstring strs[sizeof...(args)] = { (QString(args).toStdWString())... };
-		const wchar_t* strings[sizeof...(args)];
-		for (int i = 0; i < sizeof...(args); ++i)
+	template <int Argc>
+	void logMessage(DWORD type, DWORD eventID, const QString (&args)[Argc]) {
+		std::wstring strs[Argc];
+		const wchar_t* strings[Argc];
+		for (int i = 0; i < Argc; ++i) {
+			strs[i] = args[i].toStdWString();
 			strings[i] = strs[i].c_str();
+		}
 			
-		::ReportEvent(myhandle_, type, 0, eventID, nullptr, sizeof...(args), 0, strings, nullptr);
+		::ReportEvent(myhandle_, type, 0, eventID, nullptr, Argc, 0, strings, nullptr);
 	}
 
-	template <>
 	void logMessage(DWORD type, DWORD eventID) {
 		::ReportEvent(myhandle_, type, 0, eventID, nullptr, 0, 0, nullptr, nullptr);
 	}
@@ -70,5 +71,5 @@ public:
 
 public:
 	QString myname_;
-	HANDLE myhandle_ = 0;
+	HANDLE myhandle_;
 };
