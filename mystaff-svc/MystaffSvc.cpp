@@ -34,8 +34,6 @@ MystaffSvc::MystaffSvc(int argc, char* argv[]) : QtService(argc, argv, myService
 	settings.setValue("testKey", "TestValue");
 	mainAppPath_ = settings.value("MainAppPath").toString();
 
-	qDebug() << "Main app path is" << mainAppPath_;
-
 	watchdogTimer_.setInterval(watchdogInterval);
 	QObject::connect(&watchdogTimer_, SIGNAL(timeout()), SLOT(onWatchdogTimeout_()));
 }
@@ -43,6 +41,8 @@ MystaffSvc::MystaffSvc(int argc, char* argv[]) : QtService(argc, argv, myService
 
 void MystaffSvc::start()
 {
+	qDebug() << "Main app path is" << mainAppPath_;
+
 	mylog_.logMessage(EVENTLOG_INFORMATION_TYPE, MYSTAFF_MSG_STARTUP);
 
 	running_ = true;
