@@ -25,7 +25,7 @@ win32|win64 {
     CONFIG(release,debug|release):buildhook.target = Makefile.Release
     QMAKE_EXTRA_TARGETS += buildhook
 
-    RC_FILE += svc_eventlog.rc
+    RC_FILE += MystaffSvc.rc
 
     DEPENDPATH += .
 }
