@@ -5,11 +5,12 @@
  */
 #pragma once
 
+#include <QString>
+
 #include <windows.h>
 #include <psapi.h>
 
-#include <scope_guard.hxx>
-#include <QString>
+#include "scope_guard.hxx"
 
 
 // Process ID value type.
@@ -26,7 +27,7 @@ typedef DWORD	sid_t;
  * @return	[HANDLE]	- Handle to newly created process or 0 in failure.
  */
 inline
-HANDLE createProcess(const wchar_t* executablePath, wchar_t* cmdLine, bool invisible = false)
+HANDLE createProcess(const wchar_t *executablePath, wchar_t *cmdLine, bool invisible = false)
 {
 	STARTUPINFO si = { sizeof si };
 	si.dwFlags = STARTF_USESTDHANDLES;
@@ -36,8 +37,7 @@ HANDLE createProcess(const wchar_t* executablePath, wchar_t* cmdLine, bool invis
 	if (invisible)
 		flags |= CREATE_NO_WINDOW;
 	
-	if (::CreateProcess(executablePath, cmdLine, nullptr, nullptr, false, flags, nullptr, nullptr, &si, &pi))
-	{
+	if (::CreateProcess(executablePath, cmdLine, nullptr, nullptr, false, flags, nullptr, nullptr, &si, &pi)) {
 		::CloseHandle(pi.hThread);
 		return pi.hProcess;
 	}
@@ -58,12 +58,11 @@ QString getProcessImagePath(HANDLE hProcess)
 	DWORD length = MAX_PATH;
 	path.resize(length);
 
-	::QueryFullProcessImageName(hProcess, 0, const_cast<wchar_t*>(path.c_str()), &length);
+	::QueryFullProcessImageName(hProcess, 0, const_cast<wchar_t *>(path.c_str()), &length);
 
-	if (length > path.length())
-	{
+	if (length > path.length()) {
 		path.resize(length);
-		::QueryFullProcessImageName(hProcess, 0, const_cast<wchar_t*>(path.c_str()), &length);
+		::QueryFullProcessImageName(hProcess, 0, const_cast<wchar_t *>(path.c_str()), &length);
 	}
 
 	if (length < path.length())
@@ -79,7 +78,7 @@ QString getProcessImagePath(HANDLE hProcess)
  * @return	[HANDLE]	- Process handle or 0 if process was not found.
  */
 inline
-HANDLE getProcessByExecutableName(const QString& path)
+HANDLE getProcessByExecutableName(const QString &path)
 {
 	DWORD pidArray[1024];
 	DWORD bytesReturned;

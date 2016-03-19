@@ -8,12 +8,11 @@
 #include <QString>
 #include <QFileInfo>
 #include <QDir>
+#include <QDebug>
 
 #include <windows.h>
 #include <WtsApi32.h>
 #include <userenv.h>
-
-#include <QDebug>
 
 #include "scope_guard.hxx"
 #include "process_tools.hxx"
@@ -22,11 +21,13 @@
 class UserSession
 {
 public:
-	static UserSession getActiveSession() {
+	static UserSession getActiveSession()
+	{
 		return UserSession(getActiveSessionId());
 	}
 
-	static sid_t getActiveSessionId() {
+	static sid_t getActiveSessionId()
+	{
 		sid_t sid = ::WTSGetActiveConsoleSessionId();
 		return sid == UINT_MAX ? 0 : sid;
 	}
@@ -35,8 +36,9 @@ public:
 	 * Returns list of user session IDs.
 	 * @return	[QVector<intptr_t>]	- List of user session IDs.
 	 */
-	static QVector<sid_t> getSessionIDs() {
-		WTS_SESSION_INFO* si = nullptr;
+	static QVector<sid_t> getSessionIDs()
+	{
+		WTS_SESSION_INFO *si = nullptr;
 		DWORD sessionCount = 0;
 		::WTSEnumerateSessions(WTS_CURRENT_SERVER_HANDLE, 0, 1, &si, &sessionCount);
 
@@ -55,7 +57,7 @@ public:
 
 		// Get session's user name.
 		DWORD level = 1;
-		WTS_SESSION_INFO_1* si = nullptr;
+		WTS_SESSION_INFO_1 *si = nullptr;
 		DWORD count = 0;
 		if (::WTSEnumerateSessionsEx(WTS_CURRENT_SERVER_HANDLE, &level, 0, &si, &count)) {
 			for (int i = 0; i < count; ++i) {
@@ -68,7 +70,7 @@ public:
 		}
 	}
 
-	UserSession(UserSession&& other) : mysid_(other.mysid_), myhandle_(other.myhandle_) {
+	UserSession(UserSession &&other) : mysid_(other.mysid_), myhandle_(other.myhandle_) {
 		other.myhandle_ = 0;
 	}
 
@@ -86,10 +88,10 @@ public:
 	 * @param[in]	targetPath	- Path to the executable file.
 	 * @return	[pid_t]	- New process ID or 0 if the process failed to start.
 	 */
-	pid_t startProcess(const QString& targetPath) {
+	pid_t startProcess(const QString &targetPath) {
 		STARTUPINFO si = {};
 		si.cb = sizeof si;
-        si.lpDesktop = const_cast<wchar_t*>(L"");
+        si.lpDesktop = const_cast<wchar_t *>(L"");
 
 		QFileInfo fi(targetPath);
 
@@ -97,7 +99,7 @@ public:
 		QString wd = QDir::toNativeSeparators(fi.path());
 
 		// Get environment block for the user session.
-		void* env = nullptr;
+		void *env = nullptr;
 		if (!::CreateEnvironmentBlock(&env, myhandle_, false)) {
 			qDebug() << "create ENV for session" << mysid_ << "failed w/error" << GetLastError();
 		}
@@ -118,14 +120,12 @@ public:
 		return pi.dwProcessId;
 	}
 
-
-
 	/**
 	 * Finds first instance of process with given image path in the session.
 	 * @param[in]	path	- Executable image path.
 	 * @return	[HANDLE]	- Process handle or 0 if not found. The handle must be closed with ::CloseHandle().
 	 */
-	HANDLE getProcessByExecutableName(const QString& path)
+	HANDLE getProcessByExecutableName(const QString &path)
 	{
 		DWORD pidArray[1024];
 		DWORD bytesReturned;
@@ -157,7 +157,7 @@ public:
 	 * Returns name of user logged into this session (if any).
 	 * @return	[const QString&]	- User name, or empty string if no user is associated with the session.
 	 */
-	const QString& userName() const {
+	const QString &userName() const {
 		return myuserName_;
 	}
 
@@ -176,5 +176,5 @@ protected:
 
 private:
 	// DELETED
-	UserSession(const UserSession&);
+	UserSession(const UserSession &);
 };

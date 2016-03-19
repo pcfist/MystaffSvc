@@ -18,7 +18,7 @@ class MystaffSvc : public QObject, public QtService<QCoreApplication>
 {
 	Q_OBJECT
 public:
-	MystaffSvc(int argc, char* argv[]);
+	MystaffSvc(int argc, char *argv[]);
 
 	void start() override;
 	void stop() override;
@@ -65,7 +65,8 @@ private:
 	 * @param[in]	result	- Process launch result (PID) as returned by UserSession::startProcess().
 	 * @param[in]	message	- Event message.
 	 */
-	void reportAppLaunchResult_(sid_t sid, pid_t result, const char* message);
+	void reportAppLaunchResult_(sid_t sid, pid_t result, const char *message);
+
 
 private slots:
 	/**

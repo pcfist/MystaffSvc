@@ -5,9 +5,11 @@
  */
 #pragma once
 
-#include <windows.h>
 #include <QString>
 #include <QDebug>
+
+#include <windows.h>
+#include <string>
 
 #include "svc_eventlog.h"
 #include "process_tools.hxx"
@@ -16,7 +18,7 @@
 class EventLogSource
 {
 public:
-	EventLogSource(const QString& srcName) : myhandle_(0), myname_(srcName)
+	EventLogSource(const QString &srcName) : myhandle_(0), myname_(srcName)
 	{
 		/*
 		 * Set up registry values that describe messages for our event source.
@@ -28,7 +30,7 @@ public:
 		HKEY hk = 0;
 		::RegCreateKeyEx(HKEY_LOCAL_MACHINE, regPath.toStdWString().c_str(), 0, nullptr, REG_OPTION_NON_VOLATILE, KEY_SET_VALUE, nullptr, &hk, 0);
 		if (hk) {
-			auto mypath = getProcessImagePath(::GetCurrentProcess()).toStdWString();
+			std::wstring mypath = getProcessImagePath(::GetCurrentProcess()).toStdWString();
 			::RegSetValueEx(hk, L"EventMessageFile", 0, REG_SZ, (byte*)mypath.c_str(), (mypath.length() + 1)*sizeof(wchar_t));
 
 			DWORD typesSupported = EVENTLOG_SUCCESS | EVENTLOG_ERROR_TYPE | EVENTLOG_WARNING_TYPE | EVENTLOG_INFORMATION_TYPE;

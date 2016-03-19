@@ -12,8 +12,8 @@ template <typename Ty>
 class scope_guard
 {
 public:
-	scope_guard(Ty&& fn) : fn_(fn), enabled_(true) { }
-	scope_guard(scope_guard<Ty>&& other)
+	scope_guard(Ty &&fn) : fn_(fn), enabled_(true) { }
+	scope_guard(scope_guard<Ty> &&other)
 	  : fn_(std::move(other.fn_)), enabled_(other.enabled_) {
 		other.enabled_ = false;
 	}
@@ -37,13 +37,13 @@ private:
 	Ty fn_;
 	bool enabled_;
 
-	scope_guard(const scope_guard&) /*= delete*/;
-	scope_guard& operator=(const scope_guard&) /*= delete*/;
+	scope_guard(const scope_guard &) /*= delete*/;
+	scope_guard& operator=(const scope_guard &) /*= delete*/;
 };
 
 
 template <class Ty> inline
-scope_guard<Ty> make_scope_guard(Ty&& fn) {
+scope_guard<Ty> make_scope_guard(Ty &&fn) {
 	return scope_guard<Ty>(std::forward<Ty>(fn));
 }
 

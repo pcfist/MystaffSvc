@@ -20,7 +20,7 @@
 const char MystaffSvc::myServiceName[] = "MyStaff Service";
 
 
-MystaffSvc::MystaffSvc(int argc, char* argv[]) : QtService(argc, argv, myServiceName), mylog_("MystaffSvc"), running_(false)
+MystaffSvc::MystaffSvc(int argc, char *argv[]) : QtService(argc, argv, myServiceName), mylog_("MystaffSvc"), running_(false)
 {
 	QCoreApplication::setOrganizationName("TimeDoctor LLC");
 	QCoreApplication::setOrganizationDomain("mystaff.com");
@@ -62,10 +62,9 @@ void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
 	if (!running_)
 		return;
 
-	switch (eventType)
-	{
+	switch (eventType) {
 	case QtServiceBase::Logon: {
-		auto pid = launchMainApp_(sessionId);
+		pid_t pid = launchMainApp_(sessionId);
 		reportAppLaunchResult_(sessionId, pid, "LOGGED ON");
 		} break;
 
@@ -78,14 +77,14 @@ void MystaffSvc::onSessionChange(LogonEvent eventType, intptr_t sessionId)
 		break;
 
 	case QtServiceBase::Unlock: {
-		auto pid = launchMainApp_(sessionId);
+		pid_t pid = launchMainApp_(sessionId);
 		reportAppLaunchResult_(sessionId, pid, "UNLOCKED");
 		} break;
 
 	case QtServiceBase::ConnectConsole: {
-		auto pid = launchMainApp_(sessionId);
+		pid_t pid = launchMainApp_(sessionId);
 		reportAppLaunchResult_(sessionId, pid, "CONSOLE CONNECTED");
-	} break;
+		} break;
 
 	case QtServiceBase::DisconnectConsole:
 		qDebug() << "session" << sessionId << "CONSOLE DISCONNECTED";
@@ -108,23 +107,21 @@ pid_t MystaffSvc::launchMainApp_(intptr_t sessionId)
 	}
 	
 	watchdogMutex_.lock();
-	auto mutexGuard = make_scope_guard([this]{ watchdogMutex_.unlock(); });
+	// Use scope_guard to make sure we always release the mutex when exiting this function.
+	auto mutexGuard = make_scope_guard([this]() {
+		watchdogMutex_.unlock();
+	});
 
-	if (HANDLE process = s.getProcessByExecutableName(mainAppPath_))
-	{
+	if (HANDLE process = s.getProcessByExecutableName(mainAppPath_)) {
 		::CloseHandle(process);
 		return AlreadyRunning;
-	}
-	else
-	{
-		auto pid = s.startProcess(mainAppPath_);
+	} else {
+		pid_t pid = s.startProcess(mainAppPath_);
 
 		if (pid) {
 			QString args[] = { QString::number(sessionId), s.userName(), QString::number(pid) };
 			mylog_.logMessage(EVENTLOG_SUCCESS, MYSTAFF_MSG_MAIN_APP_STARTED, args);
-		}
-		else
-		{
+		} else {
 			QString args[] = { QString::number(sessionId), s.userName(), QString::number(GetLastError()) };
 			mylog_.logMessage(EVENTLOG_WARNING_TYPE, MYSTAFF_MSG_MAIN_APP_START_FAILED, args);
 		}
@@ -145,10 +142,10 @@ void MystaffSvc::reportAppLaunchResult_(sid_t sid, pid_t result, const char* mes
 
 void MystaffSvc::onWatchdogTimeout_()
 {
-	auto sessions = UserSession::getSessionIDs();
+	QVector<sid_t> sessions = UserSession::getSessionIDs();
 
 	for (int i = 0; i < sessions.size(); ++i) {
-		auto result = launchMainApp_(sessions[i]);
+		pid_t result = launchMainApp_(sessions[i]);
 
 		if (result == LaunchFailed) {
 			qWarning() << "Could not start main application in session" << sessions[i];
