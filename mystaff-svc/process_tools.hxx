@@ -3,7 +3,8 @@
  * Helper functions for process manipulation.
  * @author pcfist	@date 2015.12.10
  */
-#pragma once
+#ifndef _process_tools_hxx_
+#define _process_tools_hxx_
 
 #include <QString>
 
@@ -100,3 +101,5 @@ HANDLE getProcessByExecutableName(const QString &path)
 
 	return 0;
 }
+
+#endif // _process_tools_hxx_

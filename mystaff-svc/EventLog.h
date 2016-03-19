@@ -3,7 +3,8 @@
  * Wrapper for Windows Event Log Event Source.
  * @author pcfist	@date 2016.03.12
  */
-#pragma once
+#ifndef _eventlog_h_
+#define _eventlog_h_
 
 #include <QString>
 #include <QDebug>
@@ -75,3 +76,5 @@ public:
 	QString myname_;
 	HANDLE myhandle_;
 };
+
+#endif // _eventlog_h_

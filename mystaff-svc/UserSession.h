@@ -3,7 +3,9 @@
  * User session wrapper class.
  * @author pcfist	@date 2016.03.08
  */
-#pragma once
+#ifndef _usersession_h_
+#define _usersession_h_
+
 
 #include <QString>
 #include <QFileInfo>
@@ -178,3 +180,6 @@ private:
 	// DELETED
 	UserSession(const UserSession &);
 };
+
+
+#endif // _usersession_h_

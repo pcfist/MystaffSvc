@@ -3,7 +3,8 @@
  * Mystaff system service class based on QtService.
  * @author pcfist	@date 2016.03.01
  */
-#pragma once
+#ifndef _mystaffsvc_h_
+#define _mystaffsvc_h_
 
 #include <QCoreApplication>
 #include <QtService>
@@ -76,3 +77,4 @@ private slots:
 	void onWatchdogTimeout_();
 };
 
+#endif // _mystaffsvc_h_

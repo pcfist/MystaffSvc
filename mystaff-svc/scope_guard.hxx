@@ -3,8 +3,8 @@
  * Simple scope guard object for RAII pattern implementation.
  * @author pcfist	@date 2013.07.31
  */
-#ifndef __scope_guard_header_included__
-#define __scope_guard_header_included__
+#ifndef _scope_guard_hxx_
+#define _scope_guard_hxx_
 
 #include <utility>
 
@@ -47,4 +47,4 @@ scope_guard<Ty> make_scope_guard(Ty &&fn) {
 	return scope_guard<Ty>(std::forward<Ty>(fn));
 }
 
-#endif // __scope_guard_header_included__
+#endif // _scope_guard_hxx_
