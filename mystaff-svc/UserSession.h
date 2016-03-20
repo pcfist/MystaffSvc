@@ -72,16 +72,19 @@ public:
 		}
 	}
 
-	UserSession(UserSession &&other) : mysid_(other.mysid_), myhandle_(other.myhandle_) {
+	UserSession(UserSession &&other) : mysid_(other.mysid_), myhandle_(other.myhandle_)
+	{
 		other.myhandle_ = 0;
 	}
 
-	~UserSession() {
+	~UserSession()
+	{
 		if (myhandle_)
 			::CloseHandle(myhandle_);
 	}
 
-	bool valid() const {
+	bool valid() const
+	{
 		return myhandle_ != 0;
 	}
 
@@ -179,7 +182,8 @@ public:
 	 * Returns name of user logged into this session (if any).
 	 * @return	[const QString&]	- User name, or empty string if no user is associated with the session.
 	 */
-	const QString &userName() const {
+	const QString &userName() const
+	{
 		return myuserName_;
 	}
 
@@ -187,7 +191,8 @@ public:
 	 * Returns true if a user is logged on to this session.
 	 * @return	[bool]	- true if session is associated with user.
 	 */
-	bool isDesktopSession() const {
+	bool isDesktopSession() const
+	{
 		return !myuserName_.isEmpty();
 	}
 
