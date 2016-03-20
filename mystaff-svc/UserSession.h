@@ -15,6 +15,7 @@
 #include <windows.h>
 #include <WtsApi32.h>
 #include <userenv.h>
+#include <sddl.h>
 
 #include "scope_guard.hxx"
 #include "process_tools.hxx"
@@ -66,7 +67,9 @@ public:
 				if (si[i].SessionId != mysid_)
 					continue;
 
+				// Save username.
 				myuserName_ = QString::fromWCharArray(si[i].pUserName);
+				getUserSid_(si[i].pUserName);
 				break;
 			}
 		}
@@ -188,6 +191,15 @@ public:
 	}
 
 	/**
+	 * Returns SID of user logged into this session (if any).
+	 * @return	[const QString&]	- User SID, or empty string if no user is associated with the session.
+	 */
+	const QString &userSid() const
+	{
+		return myuserSid_;
+	}
+
+	/**
 	 * Returns true if a user is logged on to this session.
 	 * @return	[bool]	- true if session is associated with user.
 	 */
@@ -200,6 +212,51 @@ protected:
 	sid_t mysid_;
 	HANDLE myhandle_;
 	QString myuserName_;
+	QString myuserSid_;
+
+	/**
+	 * @internal
+	 * Retrieves the user's SID and stores it in myuserSid_ field.
+	 * @param[in]	userNameString	- Name of the user for which the SID should be retrieved.
+	 */
+	void getUserSid_(const wchar_t* userNameString)
+	{
+		// Get the SID.
+		DWORD sidSize = 0;
+		DWORD domainNameSize = 0;
+		SID_NAME_USE accountType = SidTypeUnknown;
+		bool result = ::LookupAccountName(nullptr, userNameString, nullptr, &sidSize, nullptr, &domainNameSize, &accountType) != FALSE;
+		DWORD lastError = GetLastError();
+
+		if (lastError == ERROR_INSUFFICIENT_BUFFER && sidSize) {
+			SID* sidBuffer = (SID*)std::malloc(sidSize);
+			if (!sidBuffer) {
+				qDebug() << "failed to allocate" << sidSize << "bytes for the SID!";
+				return;
+			}
+
+			wchar_t* domainName = (wchar_t*)std::malloc(domainNameSize*sizeof(wchar_t));
+			if (!domainName) {
+				qDebug() << "failed to allocate" << domainNameSize << "wchar_ts for domain name!";
+				std::free(sidBuffer);
+				return;
+			}
+
+			result = ::LookupAccountName(nullptr, userNameString, sidBuffer, &sidSize, domainName, &domainNameSize, &accountType);
+
+			//qDebug() << "LookupAccountName() ->" << result << "LastError =" << GetLastError() << "sid size =" << sidSize;
+
+			wchar_t* sidString = nullptr;
+			if (ConvertSidToStringSidW(sidBuffer, &sidString)) {
+				myuserSid_ = QString::fromWCharArray(sidString);
+				//qDebug() << "successfully converted the sid to string:" << myuserSid_;
+				::LocalFree(sidString);
+			}
+
+			std::free(domainName);
+			std::free(sidBuffer);
+		}
+	}
 
 private:
 	// DELETED
