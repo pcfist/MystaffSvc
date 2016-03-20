@@ -90,7 +90,19 @@ public:
 	 * @param[in]	targetPath	- Path to the executable file.
 	 * @return	[pid_t]	- New process ID or 0 if the process failed to start.
 	 */
-	pid_t startProcess(const QString &targetPath) {
+	pid_t startProcess(const QString &targetPath)
+	{
+		return startProcess(targetPath, QString::null);
+	}
+
+	/**
+	 * Starts the process in user session.
+	 * @param[in]	targetPath	- Path to the executable file.
+	 * @param[in]	cmdArguments	- Command line arguments to be passed to the process.
+	 * @return	[pid_t]	- New process ID or 0 if the process failed to start.
+	 */
+	pid_t startProcess(const QString &targetPath, const QString &cmdArguments)
+	{
 		STARTUPINFO si = {};
 		si.cb = sizeof si;
         si.lpDesktop = const_cast<wchar_t *>(L"");
@@ -106,8 +118,14 @@ public:
 			qDebug() << "create ENV for session" << mysid_ << "failed w/error" << GetLastError();
 		}
 
+		wchar_t* cmdLineBuffer = nullptr;
+		if (!cmdArguments.isEmpty()) {
+			cmdLineBuffer = new wchar_t[cmdArguments.length() + 1];
+			cmdLineBuffer[cmdArguments.toWCharArray(cmdLineBuffer)] = L'\0';
+		}
+
 		PROCESS_INFORMATION pi = {};
-		bool result = ::CreateProcessAsUser(myhandle_, targetPath.toStdWString().c_str(), nullptr, nullptr, nullptr, false, CREATE_UNICODE_ENVIRONMENT, env,
+		bool result = ::CreateProcessAsUser(myhandle_, targetPath.toStdWString().c_str(), cmdLineBuffer, nullptr, nullptr, false, CREATE_UNICODE_ENVIRONMENT, env,
 			wd.toStdWString().c_str(), &si, &pi) != FALSE;
 
 		if (result) {
@@ -115,6 +133,8 @@ public:
 		} else {
 			qDebug() << "CreateProcess() -> FAIL, error code " << GetLastError();
 		}
+
+		delete[] cmdLineBuffer;
 
 		if (env)
 			::DestroyEnvironmentBlock(env);
