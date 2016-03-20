@@ -19,7 +19,7 @@
 
 
 /*static*/
-const char MystaffSvc::myServiceName[] = "MyStaff Service";
+const char MystaffSvc::myServiceName[] = "Mystaff Service";
 
 
 MystaffSvc::MystaffSvc(int argc, char *argv[]) : QtService(argc, argv, myServiceName), mylog_("MystaffSvc"), running_(false)
