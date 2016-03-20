@@ -8,11 +8,13 @@
 
 #include <QCoreApplication>
 #include <QtService>
+#include <QString>
 #include <QSettings>
 #include <QTimer>
 
 #include "process_tools.hxx"
 #include "EventLog.h"
+#include "UserSession.h"
 
 
 class MystaffSvc : public QObject, public QtService<QCoreApplication>
@@ -59,6 +61,13 @@ private:
 	 * @see AppLaunchResult
 	 */
 	pid_t launchMainApp_(intptr_t sessionId);
+
+	/**
+	 * Creates the command line string to be passed to main process in given session
+	 * @param[in]	session	- User session object.
+	 * @return	[QString]	- Command line string.
+	 */
+	QString makeMainAppCmdLine_(const UserSession &session);
 
 	/**
 	 * Writes debug log message about main process launch attempt.

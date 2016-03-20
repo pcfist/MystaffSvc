@@ -7,6 +7,8 @@
 
 #include <QFileInfo>
 #include <QDebug>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 #include <windows.h>
 #include <psapi.h>
@@ -116,7 +118,9 @@ pid_t MystaffSvc::launchMainApp_(intptr_t sessionId)
 		::CloseHandle(process);
 		return AlreadyRunning;
 	} else {
-		pid_t pid = s.startProcess(mainAppPath_);
+		QString cmdLine = makeMainAppCmdLine_(s);
+		qDebug() << "launching" << mainAppPath_ << cmdLine << "...";
+		pid_t pid = s.startProcess(mainAppPath_, cmdLine);
 
 		if (pid) {
 			QString args[] = { QString::number(sessionId), s.userName(), QString::number(pid) };
@@ -127,6 +131,25 @@ pid_t MystaffSvc::launchMainApp_(intptr_t sessionId)
 		}
 		return pid;
 	}
+}
+
+QString MystaffSvc::makeMainAppCmdLine_(const UserSession &session)
+{
+	QString args = "--silent";
+
+	QJsonObject json;
+	json.insert("user", session.userName());
+	if (!session.userSid().isEmpty()) {
+		qDebug() << "make cmd line: user SID =" << session.userSid();
+		json.insert("userSid", session.userSid());
+	}
+
+	args += ' ';
+	QJsonDocument jsonDoc;
+	jsonDoc.setObject(json);
+	args += "--loginInfo " + jsonDoc.toJson(QJsonDocument::Compact);
+
+	return args;
 }
 
 void MystaffSvc::reportAppLaunchResult_(sid_t sid, pid_t result, const char* message)
