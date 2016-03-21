@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include mystaff.wxi?>
+  <Product Id="*" 
+             Name="Mystaff Desktop Client" 
+             Language="1033" 
+             Version="$(var.MystaffClientVersion)" 
+             Manufacturer="Mystaff LLC" 
+             UpgradeCode="$(var.MystaffClientUpgradeId)">
+    
+    <Package InstallerVersion="300" Compressed="yes" />
+        
+    <MajorUpgrade Schedule="afterInstallValidate" 
+                  AllowSameVersionUpgrades="yes"
+                  DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit." />
+    
+    <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
+
+    <Icon Id="InstallerWindowIcon.ico" SourceFile="images\InstallerWindowIcon.ico" />
+    <Property Id="ARPPRODUCTICON" Value="InstallerWindowIcon.ico" />
+        
+    <Property Id="ARPNOREPAIR" Value="yes" Secure="yes" /> 
+    <Property Id="ARPNOMODIFY" Value="yes" Secure="yes" />
+    
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLLOCATION" Name="Mystaff Desktop Client">
+					<!-- TODO: Remove the comments around this Component element and the ComponentRef 
+                         below in order to add resources to this installer. -->
+                    <!-- Component Id="ProductComponent" Guid="fd0a433e-e4d6-43d5-a7c6-336afa6e9647" -->
+						<!-- TODO: Insert files, registry keys, and other resources here. -->
+                        <!-- File Id="mystaff" DiskId="1" Source=".." / -->
+                    <!-- /Component -->
+				</Directory>
+			</Directory>
+		</Directory>
+
+    <DirectoryRef Id="TARGETDIR">
+        <Merge Id="VCRedist" 
+                SourceFile="C:\Program Files (x86)\Common Files\Merge Modules\Microsoft_VC100_CRT_x86.msm"   
+                DiskId="1" 
+                Language="0" />
+        <Component Id="RegistryEntries" Guid="bec0c4e8-3a9f-4635-954f-62af7fe28e35">
+            <RegistryKey Root="HKLM"
+                          Key="SYSTEM\CurrentControlSet\Services\EventLog\Application\MystaffDesktopClient">
+                <RegistryValue Type="integer" Name="TypesSupported" Value="7" KeyPath="yes"/>
+                <RegistryValue Type="expandable" Name="EventMessageFile" Value="[INSTALLLOCATION]mystaff.exe"/>
+            </RegistryKey>
+            <RegistryKey Root="HKLM"
+                          Key="SOFTWARE\[Manufacturer]\[ProductName]">
+                <RegistryValue Type="string" Name="InstallerFileName" Value="[OriginalDatabase]"/>
+                <RegistryValue Type="string" Name="SlaveProgramPath" Value="[INSTALLLOCATION]mystaff.exe"/>
+            </RegistryKey>
+        </Component>
+    </DirectoryRef>
+
+    <!-- MAIN APPLICATION SUBDIRS -->
+    <DirectoryRef Id="INSTALLLOCATION">
+      <Directory Id="dir_audio" Name="audio" />
+      <Directory Id="dir_bearer" Name="bearer" />
+      <Directory Id="dir_iconengines" Name="iconengines" ShortName="1itdoscw" />
+      <Directory Id="dir_imageformats" Name="imageformats" ShortName="bbhwr0mx" />
+      <Directory Id="dir_mediaservice" Name="mediaservice" ShortName="fqt4c7ix" />
+      <Directory Id="dir_platforms" Name="platforms" ShortName="oucg6rdu" />
+      <Directory Id="dir_playlistformats" Name="playlistformats" ShortName="gr5mekum" />
+      <Directory Id="dir_position" Name="position" />
+      <Directory Id="dir_printsupport" Name="printsupport" ShortName="mynfyc72" />
+      <Directory Id="dir_sensorgestures" Name="sensorgestures" ShortName="v8-mlnfv" />
+      <Directory Id="dir_sensors" Name="sensors" />
+      <Directory Id="dir_sqldrivers" Name="sqldrivers" ShortName="wct36c-m" />
+      <Directory Id="dir_UI" Name="UI" />
+    </DirectoryRef>
+    
+    <ComponentGroup Id="MyStaffClientComponentsRootDir" Directory="INSTALLLOCATION">
+      <Component Id="cmpF71D8E255426C052A1111555A51F8AC1" Guid="{3991A7B6-CC1F-4C42-8D1A-1DF2B2AA169F}">
+        <File Name="crashreporter.exe" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\crashreporter.exe" />
+      </Component>
+      <Component Id="cmpA0052A5052C4787B46762E86BA6A84D8" Guid="{7E66EE58-6881-47D6-B0EF-A3303DCEE886}">
+        <File Name="icudt53.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\icudt53.dll" />
+      </Component>
+      <Component Id="cmp3039B5EF8078F6761E43C2543977C3F7" Guid="{E4D28196-6443-463A-ABB4-AD2AE813E820}">
+        <File Name="icuin53.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\icuin53.dll" />
+      </Component>
+      <Component Id="cmp7EFD1C30239A60B1C2CF0BC6074945E0" Guid="{36B3CF25-2EC7-42D2-A644-5E8E7F5B31D3}">
+        <File Name="icuuc53.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\icuuc53.dll" />
+      </Component>
+      <Component Id="cmp811792B1E2DCEC47D559FD39F8F12913" Guid="{00F1A604-6EB0-4505-9453-C8D7B4240914}">
+        <File Name="libeay32.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\libeay32.dll" />
+      </Component>
+      <Component Id="cmpD838367364E4D96C8A1095E23FA6A694" Guid="{94C0F682-99A3-4AFB-8AB3-77B5B2F0A5CD}">
+        <File Name="libssl32.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\libssl32.dll" />
+      </Component>
+      <Component Id="cmp537EE3B9D0B49CE3E589EFE8CD6C7D73" Guid="{9555B800-C9D2-45D1-935B-B581DF31BA2B}">
+        <File Name="mystaff.dat" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\mystaff.dat" />
+      </Component>
+      <Component Id="cmp1C53AE62EC74B3A0BB1DE100F09603B1" Guid="{7860EF0D-F94D-4A6A-8CD2-3B18A19C06BD}">
+        <File Name="mystaff.exe" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\mystaff.exe" />
+      </Component>
+      <Component Id="cmpB8192CD22A0AF4D9A56C93BE8CBAAD9E" Guid="{640F8209-456E-4A45-BE1C-C15556C21646}">
+        <File Name="Qt5Core.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\Qt5Core.dll" />
+      </Component>
+      <Component Id="cmpBEE54A100508B272682604D065E0ABB6" Guid="{64AE1295-E7FB-4610-9FC3-415469FCA3C3}">
+        <File Name="Qt5Gui.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\Qt5Gui.dll" />
+      </Component>
+      <Component Id="cmp9B34907C1498FAB51BDD88119350C026" Guid="{AF1F231B-61C2-489D-9296-6026F7D4C009}">
+        <File Name="Qt5Multimedia.dll" KeyPath="yes" ShortName="9xinmrj8.dll" DiskId="1" Source="Mystaff Desktop Client\Qt5Multimedia.dll" />
+      </Component>
+      <Component Id="cmp5609720703032A46C9C90E4A57CFC0B0" Guid="{4B39D21F-4732-473B-B680-7B805628E575}">
+        <File Name="Qt5MultimediaWidgets.dll" KeyPath="yes" ShortName="a55h2mtm.dll" DiskId="1" Source="Mystaff Desktop Client\Qt5MultimediaWidgets.dll" />
+      </Component>
+      <Component Id="cmpEA51877520A4C59C17448DFDCD8922C9" Guid="{2604AAD2-5FEA-4FB2-B3A6-C6B1BA5B8CB4}">
+        <File Name="Qt5Network.dll" KeyPath="yes" ShortName="ptuamkai.dll" DiskId="1" Source="Mystaff Desktop Client\Qt5Network.dll" />
+      </Component>
+      <Component Id="cmp4D95A4030F3A0DDD1C4F051423BEDDDB" Guid="{409AC8C8-47A3-4AD4-AACD-05D578B5B21B}">
+        <File Name="Qt5Ntp.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\Qt5Ntp.dll" />
+      </Component>
+      <Component Id="cmp673CBE27512060CF29A81D14B244130E" Guid="{9C705F31-DDB7-4323-9B12-93DF43BE63F9}">
+        <File Name="Qt5OpenGL.dll" KeyPath="yes" ShortName="6vt_o-mz.dll" DiskId="1" Source="Mystaff Desktop Client\Qt5OpenGL.dll" />
+      </Component>
+      <Component Id="cmp41B4B6342E1C72FFFC0EC8066288207B" Guid="{C8BCDEE7-CFAD-4621-B02E-3C0E11F887DC}">
+        <File Name="Qt5Positioning.dll" KeyPath="yes" ShortName="tewqzvmz.dll" DiskId="1" Source="Mystaff Desktop Client\Qt5Positioning.dll" />
+      </Component>
+      <Component Id="cmp98620B9AEA4F8D098F7F73193812C65C" Guid="{D8CE2010-AD0E-4860-8CC0-44D860AD5219}">
+        <File Name="Qt5PrintSupport.dll" KeyPath="yes" ShortName="lqjs4cgy.dll" DiskId="1" Source="Mystaff Desktop Client\Qt5PrintSupport.dll" />
+      </Component>
+      <Component Id="cmpEF3B91ECD2E0271DCDAFE0A64A9C550B" Guid="{33C5D922-1544-4A0A-A353-873D3A2DF101}">
+        <File Name="Qt5Qml.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\Qt5Qml.dll" />
+      </Component>
+      <Component Id="cmpB951A92BD9E3A414BAE9C2AD9681589B" Guid="{F8FA63AD-61E4-449A-83A4-49B6A671C02F}">
+        <File Name="Qt5Quick.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\Qt5Quick.dll" />
+      </Component>
+      <Component Id="cmp53EF1B1315004D0FC7BDAC73BB99A1AD" Guid="{BD7EFFE8-BB32-4015-A959-9E39C67CDF20}">
+        <File Name="Qt5Sensors.dll" KeyPath="yes" ShortName="3augp3cc.dll" DiskId="1" Source="Mystaff Desktop Client\Qt5Sensors.dll" />
+      </Component>
+      <Component Id="cmp34DF480FA7094CB7EEE20BC28A0C1D53" Guid="{5CF5CBD3-1E2B-43C1-B860-2936BB0273AC}">
+        <File Name="Qt5Solutions_SingleApplication-2.6.dll" KeyPath="yes" ShortName="rq0aa404.dll" DiskId="1" Source="Mystaff Desktop Client\Qt5Solutions_SingleApplication-2.6.dll" />
+      </Component>
+      <Component Id="cmpD0EECE620C92E0850E977C738690DEE0" Guid="{5B7FA393-609E-4EF1-9E99-5A253C586336}">
+        <File Name="Qt5Sql.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\Qt5Sql.dll" />
+      </Component>
+      <Component Id="cmpDEED5C71366A4F0D0E80A4098697F321" Guid="{81D67CDD-323B-4EC7-B7D0-895F778E5BB9}">
+        <File Name="Qt5Svg.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\Qt5Svg.dll" />
+      </Component>
+      <Component Id="cmp06F9107964E37C398105B822A8BE7705" Guid="{79F30F2B-A5FC-4DDC-9310-85CDA9C38ADB}">
+        <File Name="Qt5WebChannel.dll" KeyPath="yes" ShortName="phpamm6v.dll" DiskId="1" Source="Mystaff Desktop Client\Qt5WebChannel.dll" />
+      </Component>
+      <Component Id="cmpC447375958FBB594FC263D58FD4C499C" Guid="{D7B38429-9C1E-47AF-B48D-B900E681E923}">
+        <File Name="Qt5WebKit.dll" KeyPath="yes" ShortName="gpzj6gmn.dll" DiskId="1" Source="Mystaff Desktop Client\Qt5WebKit.dll" />
+      </Component>
+      <Component Id="cmp245903EED5EAB4CF035FE97737F5DE4A" Guid="{DE642BFD-1966-46CB-8605-02FF65E9BEB3}">
+        <File Name="Qt5WebKitWidgets.dll" KeyPath="yes" ShortName="chfw3ufi.dll" DiskId="1" Source="Mystaff Desktop Client\Qt5WebKitWidgets.dll" />
+      </Component>
+      <Component Id="cmpE171A067369AFAA05F2B6E67C8D522A0" Guid="{ACE93E12-44C2-4C5C-A46D-706AF4BB47E6}">
+        <File Name="Qt5Widgets.dll" KeyPath="yes" ShortName="yg-af3rp.dll" DiskId="1" Source="Mystaff Desktop Client\Qt5Widgets.dll" />
+      </Component>
+      <Component Id="cmpBA6686AE9B6A5142F19FF7EF881DDCD2" Guid="{2C61C372-C977-4521-8D1A-3FF275DBC4B5}">
+        <File Name="qt_ca.qm" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\qt_ca.qm" />
+      </Component>
+      <Component Id="cmp391E72D14A0789E62E5FC182103FA3DA" Guid="{76F79F09-92CB-40CF-A1F6-32E53D96A345}">
+        <File Name="qt_cs.qm" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\qt_cs.qm" />
+      </Component>
+      <Component Id="cmp24AC9A1B78E21F2F1785D691F6318AF7" Guid="{382BEF24-5B4C-4E8A-AF3B-26EEB5B82708}">
+        <File Name="qt_de.qm" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\qt_de.qm" />
+      </Component>
+      <Component Id="cmp83863E69401CA49AF5DFF55C3FE891C2" Guid="{2986A9B3-E4BC-4AE6-97FF-09864F2B8912}">
+        <File Name="qt_fi.qm" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\qt_fi.qm" />
+      </Component>
+      <Component Id="cmp568D4DB4CD5F0C8B527F13CB8CFD37FC" Guid="{769C4773-1744-4DF2-8D89-6793637E584E}">
+        <File Name="qt_hu.qm" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\qt_hu.qm" />
+      </Component>
+      <Component Id="cmp80551851D5DAB7AB8D9CA905F241F35E" Guid="{538A6E6D-6F21-482A-9923-9B2D0E30D90C}">
+        <File Name="qt_it.qm" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\qt_it.qm" />
+      </Component>
+      <Component Id="cmpA77896207F296762CD748CDC08389AEA" Guid="{582C46B4-3D56-4F63-9270-2D7190C50774}">
+        <File Name="qt_ja.qm" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\qt_ja.qm" />
+      </Component>
+      <Component Id="cmpF2FBEE363376EC455A4F3D818D4617B1" Guid="{E3119211-F320-4F7A-9DC0-83DD371CFC84}">
+        <File Name="qt_ko.qm" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\qt_ko.qm" />
+      </Component>
+      <Component Id="cmpAF4477B4504A5B70F190D6C847C6474A" Guid="{1959D1A8-18D9-4D67-9DB6-6C8562C1909C}">
+        <File Name="qt_lv.qm" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\qt_lv.qm" />
+      </Component>
+      <Component Id="cmp59F223DE5876FC3FDA399EF9EF52BC0B" Guid="{1D75502B-0E07-4B5D-BF42-4EF87D9FC274}">
+        <File Name="qt_ru.qm" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\qt_ru.qm" />
+      </Component>
+      <Component Id="cmp39C1C65EDD276AB3D0F4F1E779964C59" Guid="{F8DAD030-D4B9-4470-9930-3EDEB1A23741}">
+        <File Name="qt_sk.qm" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\qt_sk.qm" />
+      </Component>
+      <Component Id="cmpF3EC60CAC866B5C0393957C9209F3623" Guid="{77391A64-5C3E-40D2-8078-863AD3F613C7}">
+        <File Name="qt_uk.qm" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\qt_uk.qm" />
+      </Component>
+      <Component Id="cmp92291E5EFC95CC76F335BE5FE0206D76" Guid="{EE7BB41D-1355-4A5C-B012-8FEB6D788334}">
+        <File Name="ssleay32.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\ssleay32.dll" />
+      </Component>
+      <Component Id="cmpA5BD3090FB4639D4D8D280382A0F78B7" Guid="{A105CC09-E00F-42BE-BE1F-03E3F981A6FB}">
+        <File Name="version" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\version" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- audio dir contents -->
+    <ComponentGroup Id="MyStaffClientComponents_AudioDir" Directory="dir_audio">
+      <Component Id="cmp58CAA20A700766F05D4871073F8EF280" Guid="{7DBD56EC-4671-407F-9B0B-BD2045BD9C8B}">
+        <File Name="qtaudio_windows.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\audio\qtaudio_windows.dll" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- bearer dir contents -->
+    <ComponentGroup Id="MyStaffClientComponents_BearerDir" Directory="dir_bearer">
+      <Component Id="cmp55B1BC917DBC35F7953F444C77B3F37C" Guid="{9EA73FF0-09F6-4F94-AB18-099AC6BCA445}">
+        <File Name="qgenericbearer.dll" KeyPath="yes" ShortName="c-spbxfa.dll" DiskId="1" Source="Mystaff Desktop Client\bearer\qgenericbearer.dll" />
+      </Component>
+      <Component Id="cmp62C1D4604D799FA9598BDBE564C89924" Guid="{ACD24137-B3A9-40B0-A5FF-4B207F67A25A}">
+        <File Name="qnativewifibearer.dll" KeyPath="yes" ShortName="rz9wqnei.dll" DiskId="1" Source="Mystaff Desktop Client\bearer\qnativewifibearer.dll" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- iconengines dir contents -->
+    <ComponentGroup Id="MyStaffClientComponents_IconenginesDir" Directory="dir_iconengines">
+      <Component Id="cmpAB645AF5056502E77F13EBF736086204" Guid="{2912F61A-019E-493E-852C-A4080BD6BF7B}">
+        <File Name="qsvgicon.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\iconengines\qsvgicon.dll" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- imageformats dir contents -->
+    <ComponentGroup Id="MyStaffClientComponents_ImageformatsDir" Directory="dir_imageformats">
+      <Component Id="cmpA8769BDF958B95D3D627EE80EF6EBA98" Guid="{75285AD1-00B3-4CF5-B7C0-1BCE0F7C65B5}">
+        <File Id="fil49B190EC78141A57F75EDE0ED11A8313" Name="qdds.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\imageformats\qdds.dll" />
+      </Component>
+      <Component Id="cmp71CD2BAF0CCEACD0470D8AB193395CB0" Guid="{E930D6C8-1161-4B87-BA4A-EAE338663D28}">
+        <File Id="fil875D11C82C93AB4DE3123343037B9EA1" Name="qgif.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\imageformats\qgif.dll" />
+      </Component>
+      <Component Id="cmp3784E0E6DB712EB6D30140805B77FE0C" Guid="{81A72057-EEB3-41A6-8596-0D31FA30729E}">
+        <File Id="fil59C1D2237247EA5F30D654CC74AA399E" Name="qicns.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\imageformats\qicns.dll" />
+      </Component>
+      <Component Id="cmpA4E743DCE219DBB9531F3DC0049EBC61" Guid="{E526B2CF-030C-438C-8DDA-8BF13C2D3F3C}">
+        <File Id="fil1DC60A47BFA0ED4F130B911274017D84" Name="qico.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\imageformats\qico.dll" />
+      </Component>
+      <Component Id="cmp7F0844EE23463439C8FA993494EFD0B2" Guid="{02719BE3-EA54-4F32-9B4C-AC9434D3BE6F}">
+        <File Id="fil5D5DDB92855CB1272D66132AFF7D9ECB" Name="qjp2.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\imageformats\qjp2.dll" />
+      </Component>
+      <Component Id="cmp8D8B05119E0DA90BD4481319323462FF" Guid="{87FCF783-1F25-443D-A719-0B37D48F6963}">
+        <File Id="fil77289AB2DA041E007F6647B835FB56D6" Name="qjpeg.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\imageformats\qjpeg.dll" />
+      </Component>
+      <Component Id="cmpEB6C2D9DC292D0DA1720F7E9ABE6E155" Guid="{0670150C-010A-4ABF-BA41-5794E038D15A}">
+        <File Id="fil11CB5826A52990883ABD788B9F753C6A" Name="qmng.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\imageformats\qmng.dll" />
+      </Component>
+      <Component Id="cmp9A8DA3613BF4E0A5C9949025829D866F" Guid="{478DF69F-1BC5-45BE-8B4C-65587B75BAD0}">
+        <File Id="fil2D5288BAC30184929904D994A78CD161" Name="qsvg.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\imageformats\qsvg.dll" />
+      </Component>
+      <Component Id="cmpE97C90BA47D553700B2C827A9B656EDF" Guid="{2A91AD34-9D7C-47F9-97E7-ABC05FC05165}">
+        <File Id="fil67CB87C568DDF9ECB71B3F34DF3BEB99" Name="qtga.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\imageformats\qtga.dll" />
+      </Component>
+      <Component Id="cmp773281E89F29D73E326B6F63CD01DB13" Guid="{52FAA74F-1E03-476F-B839-77E9256235DF}">
+        <File Id="fil22224DAF3AB9F4BC55BD5FF60150D340" Name="qtiff.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\imageformats\qtiff.dll" />
+      </Component>
+      <Component Id="cmp469A770D974B4935BE0ACADDED05FB97" Guid="{A7C41C8F-8172-4926-A573-D991A65FE614}">
+        <File Id="fil536990634C100A95C7286C2A1975CDE7" Name="qwbmp.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\imageformats\qwbmp.dll" />
+      </Component>
+      <Component Id="cmp04E2B0F591F9D70A73583CCB8B4FD6C3" Guid="{FE04CCBB-6B6B-45DA-8637-6AE926C0855E}">
+        <File Id="filF64A2D6BB59A59AE176E5B1617AB9DB3" Name="qwebp.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\imageformats\qwebp.dll" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- mediaservice dir contents -->
+    <ComponentGroup Id="MyStaffClientComponents_MediaserviceDir" Directory="dir_mediaservice">
+      <Component Id="cmpD3975BDAE29BE4AF7E87BF443C428040" Guid="{97AE6A44-47CD-4E2C-B300-8ED87FD935E9}">
+        <File Id="filCDAD1C0AEE57F8BD7EABD95987734F16" Name="dsengine.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\mediaservice\dsengine.dll" />
+      </Component>
+      <Component Id="cmp118BC11ADCAD0B338DCA23E9B1DD917E" Guid="{0A6F008D-7B05-4EC1-B776-DC0C4B4EF656}">
+        <File Id="fil1C1B9509FFDA61CA7B34D79D724166CF" Name="qtmedia_audioengine.dll" KeyPath="yes" ShortName="hgrbf89g.dll" DiskId="1" Source="Mystaff Desktop Client\mediaservice\qtmedia_audioengine.dll" />
+      </Component>
+      <Component Id="cmp98AA924766DE8B92CFEF291EA9D55D74" Guid="{9D61C81D-3CAC-4F0B-AA4B-42FB6034B16E}">
+        <File Id="fil157B95CEC3B61DD3419118353D22A58A" Name="wmfengine.dll" KeyPath="yes" ShortName="8eolqkyx.dll" DiskId="1" Source="Mystaff Desktop Client\mediaservice\wmfengine.dll" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- platforms dir contents -->
+    <ComponentGroup Id="MyStaffClientComponents_PlatformsDir" Directory="dir_platforms">
+      <Component Id="cmp935AF0CBF373156B1ED8ECEAB6138C8A" Guid="{EA573067-F319-41C4-AE88-F5A4289F8E03}">
+        <File Id="filCE8D51BDB4F99AE734EF06E708FDCD4A" Name="qwindows.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\platforms\qwindows.dll" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- playlistformats dir contents -->
+    <ComponentGroup Id="MyStaffClientComponents_PlaylistformatsDir" Directory="dir_playlistformats">
+      <Component Id="cmp3A1ED7FCD48FDA32C70F10808E27E5E4" Guid="{532050FF-8AA3-4507-8F84-37DDC0DC8E86}">
+        <File Id="filFDEBD179F60913DA8D29FB2469F579BB" Name="qtmultimedia_m3u.dll" KeyPath="yes" ShortName="p77lunc0.dll" DiskId="1" Source="Mystaff Desktop Client\playlistformats\qtmultimedia_m3u.dll" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- position dir contents -->
+    <ComponentGroup Id="MyStaffClientComponents_PositionDir" Directory="dir_position">
+      <Component Id="cmpE9C630FA6CA6F40E119D3C97D8E1DD6B" Guid="{E3590CFB-6EAC-49B5-A822-FA79E2C6E328}">
+        <File Id="fil1326E86A79166E56CB84F6FD87B84281" Name="qtposition_positionpoll.dll" KeyPath="yes" ShortName="lt7uvfi6.dll" DiskId="1" Source="Mystaff Desktop Client\position\qtposition_positionpoll.dll" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- printsupport dir contents -->
+    <ComponentGroup Id="MyStaffClientComponents_PrintsupportDir" Directory="dir_printsupport">
+      <Component Id="cmpE494DF36B87A076AE6FBD2352BF567F6" Guid="{98127FDC-719B-4704-9BF6-01E504FD785F}">
+        <File Id="filBD5D3DEBE812CC2439758AAFBB588C9C" Name="windowsprintersupport.dll" KeyPath="yes" ShortName="qv_dyhjh.dll" DiskId="1" Source="Mystaff Desktop Client\printsupport\windowsprintersupport.dll" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- sensorgestures dir contents -->
+    <ComponentGroup Id="MyStaffClientComponents_SensorgesturesDir" Directory="dir_sensorgestures">
+      <Component Id="cmp38CF98D1B70FEF924052578B2A25CA74" Guid="{74D74050-5DE3-473A-BFF6-4595EB81CC5B}">
+        <File Id="fil7A0BA193FC6E5F24EDA5E81908275651" Name="qtsensorgestures_plugin.dll" KeyPath="yes" ShortName="l4ag2ddg.dll" DiskId="1" Source="Mystaff Desktop Client\sensorgestures\qtsensorgestures_plugin.dll" />
+      </Component>
+      <Component Id="cmpC26E9A20F526F422787B39DC36F806D7" Guid="{775FB58F-224F-44DA-9AD1-B5D44CAC4713}">
+        <File Id="fil41A61376775681BB4A9FD89C175851B3" Name="qtsensorgestures_shakeplugin.dll" KeyPath="yes" ShortName="v8tabffv.dll" DiskId="1" Source="Mystaff Desktop Client\sensorgestures\qtsensorgestures_shakeplugin.dll" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- sensors dir contents -->
+    <ComponentGroup Id="MyStaffClientComponents_SensorsDir" Directory="dir_sensors">
+      <Component Id="cmp16E05A96D47A01E1129C09DE8294A908" Guid="{35D27B3C-5C7B-4324-B9BE-86CD9E719CD0}">
+        <File Id="fil8632A10F0B059CBA7080C78342E9CD5B" Name="qtsensors_generic.dll" KeyPath="yes" ShortName="u8uyvvvs.dll" DiskId="1" Source="Mystaff Desktop Client\sensors\qtsensors_generic.dll" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- sqldrivers dir contents -->
+    <ComponentGroup Id="MyStaffClientComponents_SqldriversDir" Directory="dir_sqldrivers">
+      <Component Id="cmpFB644B19AC885C94D7F3B3E6879DF5CF" Guid="{6B8A01EA-1463-4D1F-907F-08F73CC84ABF}" >
+        <File Id="fil645F8D45F71AD4334E7BEC130DC9EEC0" Name="qsqlcipher.dll" KeyPath="yes" ShortName="yush-zry.dll" DiskId="1" Source="Mystaff Desktop Client\sqldrivers\qsqlcipher.dll" />
+      </Component>
+      <Component Id="cmp2408C622E584D13083F366A96DD2DB6B" Guid="{BD24572B-FC75-4694-9FDC-B549AE1936FF}">
+        <File Id="filB51388B8B318655C719A586E7CE942DF" Name="qsqlite.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\sqldrivers\qsqlite.dll" />
+      </Component>
+      <Component Id="cmpAB6EDFDFE25E565E299827DF6D2F522F" Guid="{9181F287-DD6C-4115-A2E2-B8A389D64742}">
+        <File Id="fil63161273F64FA018EAA5FE1C88F2A695" Name="qsqlmysql.dll" KeyPath="yes" ShortName="kuonad13.dll" DiskId="1" Source="Mystaff Desktop Client\sqldrivers\qsqlmysql.dll" />
+      </Component>
+      <Component Id="cmpF165FA9B011BD56AE496A8A06D6A4081" Guid="{5D690F38-D032-43D0-8CC0-7361B116CE62}">
+        <File Id="fil9CCF3FB0C71E7D9B1C6CB44BDD2F4895" Name="qsqlodbc.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\sqldrivers\qsqlodbc.dll" />
+      </Component>
+      <Component Id="cmp5ACEB5EFC970DB47EF430AADE15EB5AA" Guid="{11BCEBE1-5962-438E-881B-FC6A49B5174C}">
+        <File Id="fil27FA5685E0CF398219277BCA58032E6F" Name="qsqlpsql.dll" KeyPath="yes" DiskId="1" Source="Mystaff Desktop Client\sqldrivers\qsqlpsql.dll" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- UI dir contents -->
+    <ComponentGroup Id="MyStaffClientComponents_UIDir" Directory="dir_UI">
+      <Component Id="cmp9C2C0B93554FB6624D6BD9F24A6587F6" Guid="{CDF0C500-1BC4-49F1-9E76-B7020981FB5E}">
+        <File Id="fil19AA6330AEF59C5CD943BFB5516D11F0" Name="index.html" KeyPath="yes" ShortName="xfhwrwjm.htm" DiskId="1" Source="Mystaff Desktop Client\UI\index.html" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Group containing all components related to Mystaff Desktop Client -->
+    <ComponentGroup Id="MyStaffClientComponents">
+      <ComponentGroupRef Id="MyStaffClientComponentsRootDir" />
+      <ComponentGroupRef Id="MyStaffClientComponents_AudioDir" />
+      <ComponentGroupRef Id="MyStaffClientComponents_BearerDir" />
+      <ComponentGroupRef Id="MyStaffClientComponents_IconenginesDir" />
+      <ComponentGroupRef Id="MyStaffClientComponents_ImageformatsDir" />
+      <ComponentGroupRef Id="MyStaffClientComponents_MediaserviceDir" />
+      <ComponentGroupRef Id="MyStaffClientComponents_PlatformsDir" />
+      <ComponentGroupRef Id="MyStaffClientComponents_PlaylistformatsDir" />
+      <ComponentGroupRef Id="MyStaffClientComponents_PositionDir" />
+      <ComponentGroupRef Id="MyStaffClientComponents_PrintsupportDir" />
+      <ComponentGroupRef Id="MyStaffClientComponents_SensorgesturesDir" />
+      <ComponentGroupRef Id="MyStaffClientComponents_SensorsDir" />
+      <ComponentGroupRef Id="MyStaffClientComponents_SqldriversDir" />
+      <ComponentGroupRef Id="MyStaffClientComponents_UIDir" />
+    </ComponentGroup>
+
+    <!-- END main app files -->
+
+    
+    <DirectoryRef Id="INSTALLLOCATION">
+      <Component Id="MyStaffSvc">
+        <File Name="MystaffSvc.exe" KeyPath="yes" Source="Mystaff Desktop Client\MystaffSvc.exe" />
+        
+        <RegistryKey Root="HKLM" Key="SOFTWARE\[Manufacturer]\MystaffSvc">
+          <RegistryValue Type="string" Name="InstallerFileName" Value="[OriginalDatabase]"/>
+        </RegistryKey>
+        <RegistryKey Root="HKLM" Key="SYSTEM\CurrentControlSet\Services\EventLog\Application\MystaffSvc">
+          <RegistryValue Type="integer" Name="TypesSupported" Value="7" />
+          <RegistryValue Type="string" Name="EventMessageFile" Value="[INSTALLLOCATION]mystaff.exe"/>
+        </RegistryKey>
+
+        <ServiceInstall Id="MystaffSvc_Install" Type="ownProcess" Start="auto" Name="MystaffSvc" DisplayName="Mystaff Service" ErrorControl="normal" />
+        <ServiceControl Id="MystaffSvc_Control" Name="MystaffSvc" Start="install" Stop="both" Remove="uninstall" />
+      </Component>
+    </DirectoryRef>
+
+
+    <Feature Id="VCRedist" Title="Visual C++ 10.0 Runtime" AllowAdvertise="no" Display="hidden" Level="1">
+        <MergeRef Id="VCRedist" />
+    </Feature>
+
+    <Feature Id="ProductFeature" Title="Mystaff Desktop Client" Level="1">
+        <ComponentGroupRef Id="MyStaffClientComponents"/>
+        <ComponentRef Id="RegistryEntries" />
+    </Feature>
+
+    <Feature Id="ServiceFeature" Title="Mystaff Service" Level="1">
+      <ComponentRef Id="MyStaffSvc" />
+      <ComponentRef Id="RegistryEntries" />
+    </Feature>
+
+
+    <CustomAction Id="BeforeUninstall01"
+                  Directory="INSTALLLOCATION"
+                  ExeCommand='"[INSTALLLOCATION]mystaff.exe" --forcequit'
+                  Execute="immediate" 
+                  Return="check" />
+
+    <CustomAction Id="forceQuitMystaffClient"
+                  Directory="INSTALLLOCATION"
+                  ExeCommand='"[INSTALLLOCATION]mystaff.exe" --forcequit'
+                  Execute="immediate" 
+                  Return="asyncWait" />
+
+    <CustomAction Id="launchMystaffClient"
+                  Directory="INSTALLLOCATION"
+                  ExeCommand='"[INSTALLLOCATION]mystaff.exe" "--installer=[OriginalDatabase]"'
+                  Execute="immediate" 
+                  Return="asyncNoWait" />
+                      
+    <CustomAction Id="Message1" Script="vbscript">
+        <![CDATA[
+            MsgBox("First Install?")
+        ]]>
+    </CustomAction>                      
+
+    <InstallExecuteSequence>
+        <!-- Custom Action="Message1" Before="BeforeUninstall01">REMOVE="ALL"></Custom -->
+        <Custom Action="BeforeUninstall01" After="CostFinalize">REMOVE="ALL"</Custom>
+        <!-- Custom Action="forceQuitMystaffClient" Before="RemoveExistingProducts"/ -->
+        <Custom Action="launchMystaffClient" After="InstallFinalize"/>
+    </InstallExecuteSequence>
+  </Product>
+</Wix>

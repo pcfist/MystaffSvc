@@ -1,0 +1,98 @@
+<html>
+<head>
+    <title>Loading...</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="refresh" content="2; url=http://hybrid.mystaff.com/"/>
+    <style>
+        body {
+            background: rgb(62, 78, 184);
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            text-align: center;
+            font-family: sans-serif;
+            font-size: 16px;
+            position: absolute;
+            top: 52%;
+            left: 0;
+            right: 0;
+            color: #fff;
+        }
+
+        .cssload-clock{
+            border-radius: 58px;
+            border: 3px solid rgb(255,255,255);
+            height: 78px;
+            width: 78px;
+            position: relative;
+            top: calc(50% - 78px);
+            left: 35%;
+            left: calc(50% - 42px);
+            left: -webkit-calc(50% - 42px);
+        }
+        .cssload-clock:after{
+            content: "";
+            position: absolute;
+            background-color: rgb(255,255,255);
+            top:2px;
+            left: 48%;
+            height: 37px;
+            width: 4px;
+            border-radius: 5px;
+            transform-origin: 50% 97%;
+                -webkit-transform-origin: 50% 97%;
+            animation: grdAiguille 0.7s linear infinite;
+                -webkit-animation: grdAiguille 0.7s linear infinite;
+        }
+
+        .cssload-clock:before{
+            content: "";
+            position: absolute;
+            background-color: rgb(255,255,255);
+            top:6px;
+            left: 48%;
+            height: 34px;
+            width: 4px;
+            border-radius: 5px;
+            transform-origin: 50% 94%;
+                -webkit-transform-origin: 50% 94%;
+            animation: ptAiguille 4.2s linear infinite;
+                -webkit-animation: ptAiguille 4.2s linear infinite;
+        }
+
+        @keyframes grdAiguille{
+                0%{transform:rotate(0deg);}
+                100%{transform:rotate(360deg);}
+        }
+
+        @-webkit-keyframes grdAiguille{
+                0%{-webkit-transform:rotate(0deg);}
+                100%{-webkit-transform:rotate(360deg);}
+        }
+
+        @keyframes ptAiguille{
+                0%{transform:rotate(0deg);}
+                100%{transform:rotate(360deg);}
+        }
+
+        @-webkit-keyframes ptAiguille{
+                0%{-webkit-transform:rotate(0deg);}
+                100%{-webkit-transform:rotate(360deg);}
+        }
+    </style>
+    <script>
+        // NOTE: using of Math.round() will give an uneven distribution!
+        function getRandomInt(min, max)
+        {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        TdBridge.startRefreshTimer(getRandomInt(10000, 20000), true);
+    </script>
+</head>
+<body>
+    <div class="loading-text">Loading... Please wait...</div>
+    <div class="cssload-clock"></div>
+</body>
+</html>

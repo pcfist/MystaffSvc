@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?define MystaffClientVersion="0.0.1.27" ?>
+  <?define var.MystaffClientUpgradeId="{FD79FFE0-A24D-4F5A-9351-801DCE77C8C9}" ?>
+</Include>
