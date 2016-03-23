@@ -15,7 +15,11 @@ Service application is built with Qt Framework and depends on [QtService library
 The application can be built with Qt Creator (qmake) or using Visual Studio project files. Supports Visual C++ 2010 and higher.
 
 ###Installation:
-Run the following command in the elevated command prompt:
+####Automatic installation
+The service can be installed using dedicated MSI installer (it also installs the main application). The installer's source code and required binary files are located in the `mystaff-client-setup` subdirectory. MSI package can be built using [WiX Toolset](http://wixtoolset.org/releases/) or using WiX plugin Visual Studio.
+
+####Manual installation
+To install the service manually, run the following command in the elevated command prompt:
 ```
 MystaffSvc -i
 ```
@@ -36,6 +40,15 @@ HKEY_LOCAL_MACHINE\SOFTWARE\[Wow6432Node\]TimeDoctor LLC\MystaffSvc\
 (The `Wow6432Node` part should be used when running 32-bit service on 64-bit operating system.)
 
 There is only one parameter — `MainAppPath`, which points to location of the main process (the one to be kept alive). To set it, just create a registry value of type REG_SZ with full path to the main process executable.
+
+### Interaction with Main Application
+The service interacts with the main application (Mystaff Desktop Client) mainly by passing command line parameters when launching it in each user session. The parameters are passed in the following form:
+```
+mystaff.exe --silent --loginInfo <user-info-json>
+```
+where `<user-info-json>` is a user session information block in JSON format. It can contain the following fields:
+* `user`: name of the user logged into the session;
+* `userSid`: a user's SID string (Windows-specific).
 
 ###Logging
 The service writes events to the system log on startup and shutdown and when it launches the main process. You can view these messages using Event Viewer (`eventvwr.msc`).
